@@ -9,7 +9,7 @@ public class Const {
 	public static final String EMAIL = "email";
 	public static final String USERNAME = "username";
 	
-	public static final String TOKEN_PREFIX = "token_";
+	public static final String TOKEN_PREFIX = "token_resetPassword";
 	
 	public interface RedisCacheExtime{
 		int REDIS_SESSION_EXTIME = 60 * 30; //30分钟
@@ -21,6 +21,10 @@ public class Const {
 		int ROLE_CUSTOMER = 0;//普通用户
 		int ROLE_ADMIN = 1;//管理员
 	}
+	
+	public interface  ErrorMessage{
+		String USER_NOT_LOGIN = "User is not logged in!";
+    }
 	
 	//Product搜索中, 排序规则定义, price是orderBy的字段, desc和asc是降序和升序
 	public interface ProductListOrderBy{

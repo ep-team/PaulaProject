@@ -24,7 +24,24 @@ import com.eshop.utilities.CookieUtil;
 import com.eshop.utilities.JsonUtil;
 import com.eshop.utilities.RedisPoolUtil;
 
-
+/**
+ * 
+ * @author Paula Lin
+ * 
+ * Description: 
+ * This is the controller to handle the request for user access permission and user information management:
+ *    1. User login
+ *    2. User logout
+ *    3. Reset user password when user logins
+ *    4. Reset user password when user forgets original password with below processes:
+ *    		a.	Get secrete question to help on following password reset.
+ *    		b.	Validate the answer of secrete question from client’s request. If answers are correct, then provide a token for client .
+ *    		c.	Reset password with username, new password and token.
+ *    5. Get User Information
+ *    6. Validate user information according to type, like username and email
+ *    7. Update User Information
+ *
+ */
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -33,176 +50,239 @@ public class UserController {
 	
 	@Autowired
 	private IUserService iUserService;
-	/*
-	 * User login
-	 * @param username
-	 * @param password
-	 * @param session
+	
+	/**
+	 * @param user
 	 * @return
+	 * 
+	 * Description:
+	 * This method handler is provided to receive new user's registration.
 	 */
-	@RequestMapping(value="login.do", method = RequestMethod.POST)
-	@ResponseBody//返回时自动通过SpringMVC的json插件将返回值序列化为json,
-				 //如在springmvc-dispatcher-servlet.xml配置了json相关的converter
-				 //并注入属性值supportedMediaType为application/json
-	//二期修改-start
-	//public ServerResponse<User> login(String username, String password, HttpSession session) {
-	public ServerResponse<User> login(String username, String password, HttpSession session, HttpServletResponse httpServletResponse) {
-	//二期修改-end
-		//serveice -> MyBatis -> dao 
-		ServerResponse<User> response = iUserService.login(username, password);
-		if(response.isSuccess()) {
-			
-			//二期修改-start
-			
-			//session.setAttribute(Const.CURRENT_USER, response.getData());
-			CookieUtil.writeLoginToken(httpServletResponse, session.getId());
-			
-			//登录成功, 不将user信息放入session中, 直接放入redis
-			//sessionId在chrom->Network->Request Headers中->cookie中的JSESSIONID, 在chrom->Application->JSESSIONID也是
-			//tomcat重启, 再次请求时, request的JSESSIONID会改变
-			RedisPoolUtil.setEx(session.getId(), Const.RedisCacheExtime.REDIS_SESSION_EXTIME, JsonUtil.obj2String(response.getData()));
-		    
-			//二期修改-end
-		}
-		return response;
-	}
-	
-	@RequestMapping(value="logout.do", method = RequestMethod.POST)
-	@ResponseBody
-	
-	//二期修改-start
-	//public ServerResponse<String> logout(HttpSession session) {
-	public ServerResponse<String> logout(HttpSession session, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-		//session.removeAttribute(Const.CURRENT_USER);
-		String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-		CookieUtil.delLoginToken(httpServletRequest, httpServletResponse);
-		RedisPoolUtil.del(loginToken);
-    //二期修改-end
-		
-		return ServerResponse.createBySuccess();
-	}
-	
 	@RequestMapping(value="register.do", method = RequestMethod.POST)
 	@ResponseBody
 	public ServerResponse<String> reigster(User user) {
 		return iUserService.register(user);
 	}
 	
-	@RequestMapping(value="check_valid.do", method = RequestMethod.POST)
+	/**
+	 * 
+	 * @param username
+	 * @param password
+	 * @param session
+	 * @param httpServletResponse
+	 * @return
+	 * 
+	 * Description:
+	 * This method handler is provided for user access and related validation.
+	 */
+	@RequestMapping(value="login.do", method = RequestMethod.POST)
 	@ResponseBody
-	public ServerResponse<String> checkValid(String str, String type){
-		return iUserService.checkValid(str, type);
-	}
-	
-	@RequestMapping(value="get_user_info.do", method = RequestMethod.POST)
-	@ResponseBody
-	//二期修改-start
-	//public ServerResponse<User> getUserInfo(HttpSession session) {
-	public ServerResponse<User> getUserInfo(HttpServletRequest httpServletRequest) {
-		//User user = (User) session.getAttribute(Const.CURRENT_USER);
-		String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-		if(StringUtils.isEmpty(loginToken)) {
-			logger.error("用户未登录, 无法获取当前用户的信息 with empty loginToken");
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
-		}
-		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User user = JsonUtil.string2Obj(userJsonStr, User.class);
+	public ServerResponse<User> login(String username, String password, HttpSession session, HttpServletResponse httpServletResponse) {
 		
-		//二期修改-end
-		if(user != null) {
-			return ServerResponse.createBySuccess(user);
-		}else {
-			logger.error("用户未登录, 无法获取当前用户的信息 with empty user info");
-		}
-		return ServerResponse.createByErrorMessage("用户未登录,无法获取当前用户的信息");
-	}
-	
-	@RequestMapping(value="forget_get_question.do", method = RequestMethod.POST)
-	@ResponseBody
-	public ServerResponse<String> forgetPasswordGetQuestion(String username) {
-		return iUserService.selectQuestion(username);
-	}
-	
-	@RequestMapping(value="forget_check_answer.do", method = RequestMethod.POST)
-	@ResponseBody
-	public ServerResponse<String> forgetCheckAnswer(String username, String question, String answer) {
-		//使用本地的Guava缓存来做token
-		return iUserService.checkAnswer(username, question, answer);
-	}
-	
-	@RequestMapping(value="forget_reset_password.do", method = RequestMethod.POST)
-	@ResponseBody
-	public ServerResponse<String> forgetResetPassword(String username, String passwordNew, String forgetToken) {
-		return iUserService.forgetResetPassword(username, passwordNew, forgetToken);
-	}
-	
-	@RequestMapping(value="reset_password.do", method = RequestMethod.POST)
-	@ResponseBody
-	//二期修改-start
-	//public ServerResponse<String> resetPassword(HttpSession session, String passwordOld, String passwordNew) {
-	public ServerResponse<String> resetPassword(HttpServletRequest httpServletRequest, String passwordOld, String passwordNew) {
-		//User user = (User)session.getAttribute(Const.CURRENT_USER);
-				String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-				if(StringUtils.isEmpty(loginToken)) {
-					return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
-				}
-				String userJsonStr = RedisPoolUtil.get(loginToken);
-				User user = JsonUtil.string2Obj(userJsonStr, User.class);
-				
-	//二期修改-end
-				
-		if(user == null){
-			return ServerResponse.createByErrorMessage("用户未登录");
-		}
-		return iUserService.resetPassword(passwordOld, passwordNew, user);
-	}
-	
-	@RequestMapping(value="update_infomation.do", method = RequestMethod.POST)
-	@ResponseBody
-	//二期修改-start
-	//public ServerResponse<User> update_infomation(HttpSession session, User user) {
-	public ServerResponse<User> update_infomation(HttpServletRequest httpServletRequest, User user) {
-		//User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
-		String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
-		}
-		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User currentUser = JsonUtil.string2Obj(userJsonStr, User.class);		
-    //二期修改-end
+		//Prepare server response
+		ServerResponse<User> response = iUserService.login(username, password);
 		
-		if(currentUser == null) {
-			return ServerResponse.createByErrorMessage("用户未登录");
-		}
-		currentUser.setId(currentUser.getId());
-		currentUser.setUsername(currentUser.getUsername());
-		ServerResponse<User> response = iUserService.updateInfomation(currentUser);
+		//if pass the validation for user access, then cache user's info <sessionId, UserInfo> as loginToken to redis for 30 min
+		//RedisCacheExtime.REDIS_SESSION_EXTIME = 30 min
 		if(response.isSuccess()) {
-			//二期修改-start
-			//session.setAttribute(Const.CURRENT_USER, response.getData());
-			RedisPoolUtil.setEx(loginToken, Const.RedisCacheExtime.REDIS_SESSION_EXTIME, JsonUtil.obj2String(response.getData()));
-			//二期修改-end
+			RedisPoolUtil.setEx(session.getId(), Const.RedisCacheExtime.REDIS_SESSION_EXTIME, JsonUtil.obj2String(response.getData()));
 		}
 		return response;
 	}
 	
-	@RequestMapping(value="get_infomation.do", method = RequestMethod.POST)
+	/**
+	 * 
+	 * @param session
+	 * @param httpServletRequest
+	 * @param httpServletResponse
+	 * @return
+	 * 
+	 * Description:
+	 * This method handler is provided for user logout.
+	 */
+	@RequestMapping(value="logout.do", method = RequestMethod.POST)
 	@ResponseBody
-	//二期修改-start
-	//public ServerResponse<User> get_infomation(HttpSession session){
-	public ServerResponse<User> get_infomation(HttpServletRequest httpServletRequest){
-		//User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+	public ServerResponse<String> logout(HttpSession session, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		//Retrieve the loginToken from request
 		String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+		//Delete loginToken in response
+		CookieUtil.delLoginToken(httpServletRequest, httpServletResponse);
+		//Delete loginToken in Redis.
+		RedisPoolUtil.del(loginToken);
+		return ServerResponse.createBySuccess();
+	}
+	
+	
+	/**
+	 * 
+	 * @param value
+	 * @param type
+	 * @return
+	 * 
+	 * Description:
+	 * This method handler is provided for user information validation.
+	 */
+	@RequestMapping(value="check_valid.do", method = RequestMethod.POST)
+	@ResponseBody
+	public ServerResponse<String> checkValid(String value, String type){
+		
+		//validate user information according to type, like username, email..etc
+		return iUserService.checkValid(value, type);
+	}
+		
+	/**
+	 * 
+	 * @param username
+	 * @return
+	 * 
+	 * Description:
+	 * This method handler is provided to get secrete question for further password resetting when user forget original password.
+	 */
+	@RequestMapping(value="forget_pwd_get_secretQuestion.do", method = RequestMethod.POST)
+	@ResponseBody
+	public ServerResponse<String> GetSecretQuestion(String username) {
+		//Retrieve questions according to username
+		return iUserService.selectSecretQuestion(username);
+	}
+	
+	/**
+	 * 
+	 * @param username
+	 * @param question
+	 * @param answer
+	 * @return
+	 * 
+	 * Description:
+	 * This method handler is provided to check user's answers for secret questions when forget original password.
+	 */
+	@RequestMapping(value="forget_pwd_check_answer.do", method = RequestMethod.POST)
+	@ResponseBody
+	public ServerResponse<String> CheckAnswer(String username, String question, String answer) {
+		//Return token for password resetting when answer of secrete questions are correct
+		return iUserService.checkAnswer(username, question, answer);
+	}
+	
+	/**
+	 * 
+	 * @param username
+	 * @param passwordNew
+	 * @param forgetToken
+	 * @return
+	 * 
+	 * Description:
+	 * This method handler is provided to reset user's password when forget original password
+	 */
+	@RequestMapping(value="forget_reset_password.do", method = RequestMethod.POST)
+	@ResponseBody
+	public ServerResponse<String> forgetResetPassword(String username, String passwordNew, String token) {
+		//Update user's new password according to username and token
+		return iUserService.forgetResetPassword(username, passwordNew, token);
+	}
+	
+	/**
+	 * @param httpServletRequest
+	 * @param passwordOld
+	 * @param passwordNew
+	 * @return
+	 * 
+	 * Description:
+	 * This method handler is provided to reset user's password after user login and with old password
+	 */
+	@RequestMapping(value="reset_password.do", method = RequestMethod.POST)
+	@ResponseBody
+	public ServerResponse<String> resetPassword(HttpServletRequest httpServletRequest, String passwordOld, String passwordNew) {
+		
+		String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+		//Check if loginToken is empty
+		if (StringUtils.isEmpty(loginToken)) {
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
+		//Transfer json string of user info to User object.
+		User user = JsonUtil.string2Obj(userJsonStr, User.class);
+
+		if (user == null) {
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
+		}
+		
+		//reset user's password according to old password and new password
+		return iUserService.resetPassword(passwordOld, passwordNew, user);
+	}
+	
+	/**
+	 * @param httpServletRequest
+	 * @return
+	 * 
+	 * Description:
+	 * This method handler is provided to get user's information
+	 */
+	@RequestMapping(value="get_user_info.do", method = RequestMethod.POST)
+	@ResponseBody
+	public ServerResponse<User> getUserInfo(HttpServletRequest httpServletRequest) {
+		//Retrieve loginToken from request
+		String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+		
+		//Check if loginToken is empty
+		if(StringUtils.isEmpty(loginToken)) {
+			logger.error("User is not logged in!, failed to get information with empty loginToken");
+			return ServerResponse.createByErrorMessage("User is not logged in, failed to get information for user!");
+		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
+		String userJsonStr = RedisPoolUtil.get(loginToken);
+		
+		//Transfer json string of user info to User object.
+		User user = JsonUtil.string2Obj(userJsonStr, User.class);
+		
+		if(null == user) {
+			logger.error(" User is not logged in, failed to get information for user!");
+			return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), Const.ErrorMessage.USER_NOT_LOGIN);
+		}
+		
+		return iUserService.getInfomation(user.getId());
+	}
+	
+	/**
+	 * 
+	 * @param httpServletRequest
+	 * @param user
+	 * @return
+	 * 
+	 * Description:
+	 * This method handler is provided to update user's information
+	 */
+	@RequestMapping(value="update_infomation.do", method = RequestMethod.POST)
+	@ResponseBody
+	public ServerResponse<User> update_infomation(HttpServletRequest httpServletRequest, User user) {
+		//Retrieve loginToken from request
+		String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+		
+		//Check if loginToken is empty
+		if(StringUtils.isEmpty(loginToken)) {
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
+		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
+		String userJsonStr = RedisPoolUtil.get(loginToken);
+		//Transfer json string of user info to User object.
 		User currentUser = JsonUtil.string2Obj(userJsonStr, User.class);		
-    //二期修改-end
 		
 		if(currentUser == null) {
-			return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "未登录,需要强制登录status=10");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
-		return iUserService.getInfomation(currentUser.getId());
+		
+		//Update user's information
+		currentUser.setId(currentUser.getId());
+		currentUser.setUsername(currentUser.getUsername());
+		ServerResponse<User> response = iUserService.updateInfomation(currentUser);
+		
+		//After succeed to update user's information , reset the expired time of loginToken
+		if(response.isSuccess()) {
+			RedisPoolUtil.setEx(loginToken, Const.RedisCacheExtime.REDIS_SESSION_EXTIME, JsonUtil.obj2String(response.getData()));
+		}
+		return response;
 	}
+
 }

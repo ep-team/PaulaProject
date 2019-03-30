@@ -93,7 +93,7 @@ public class UserServiceImpl implements IUserService {
 		return ServerResponse.createBySuccessMessage("校验成功," + type + "不存在!");
 	}
 
-	public ServerResponse selectQuestion(String username) {
+	public ServerResponse selectSecretQuestion(String username) {
 		ServerResponse validatedResponse = this.checkValid(username, Const.USERNAME);
 		if (validatedResponse.isSuccess()) {
 			// 用户不存在
