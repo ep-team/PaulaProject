@@ -25,9 +25,6 @@ import com.eshop.utilities.JsonUtil;
 import com.eshop.utilities.RedisPoolUtil;
 
 /**
- * 
- * @author Paula Lin
- * 
  * Description: 
  * This is the controller to handle the request for user access permission and user information management:
  *    1. User login
@@ -40,6 +37,8 @@ import com.eshop.utilities.RedisPoolUtil;
  *    5. Get User Information
  *    6. Validate user information according to type, like username and email
  *    7. Update User Information
+ *    
+ * @author Paula Lin
  *
  */
 @Controller
