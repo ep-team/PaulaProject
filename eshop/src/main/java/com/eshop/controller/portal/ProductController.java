@@ -50,7 +50,7 @@ public class ProductController {
   
     /**
      * Description: 
-     * This method handler is to list product details by filtering keyword and categoryId
+     * This method handler is to list product by filtering keyword and categoryId, and paginate it.
      * 
      * @param keyword
      * @param categoryId
@@ -81,7 +81,7 @@ public class ProductController {
 
   /**
    * Description: 
-   * This method handler is to list product details by filtering keyword
+   * This method handler is to list product by filtering keyword, and paginate it.
    * 
    * @param keyword
    * @param pageNum
@@ -110,7 +110,7 @@ public class ProductController {
 
   /**
    * Description: 
-   * This method handler is to list product details by filtering categoryId
+   * This method handler is to list product by filtering categoryId, and paginate it.
    * 
    * @param categoryId
    * @param pageNum

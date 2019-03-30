@@ -1,5 +1,6 @@
 package com.eshop.controller.backend;
 
+import com.eshop.common.Const;
 import com.eshop.common.ServerResponse;
 import com.eshop.pojo.Product;
 import com.eshop.service.IFileService;
@@ -23,9 +24,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
- * Created by paula
- */
+ * Description: 
+ * This is the controller to handle the request to ask for product management in background system:
+ * 
+ *      1.	add new product or update product's information
+ *		2.	set the sale status of product to let the product on sale or off the shelves.
+ *		3.	get the details of one product.
+ *		4.	get the list of product by pageNum and pageSize
+ *		5.	search product by filtering productName and productId
+ *		6.	upload file(like text file) to ftp server
+ *		7.	upload rich text and image to system server
 
+ *      
+ * @author Paula
+ *
+ */
 @Controller
 @RequestMapping("/manage/product")
 public class ProductManageController {
@@ -38,18 +51,27 @@ public class ProductManageController {
     @Autowired
     private IFileService iFileService;
 
-    /*
-     * 商品新增或更新
+    /**
+     * Description: 
+     * This method handler is to handle the request to add new product or update product's information in background system.
+     * 
+     * @param product
+     * @return
      */
     @RequestMapping("save.do")
     @ResponseBody
    public ServerResponse productSave(Product product){
-    	//填充我们增加产品的业务逻辑
         return iProductService.saveOrUpdateProduct(product);
     }
   
-    /*
-     * 通过更新状态来实现商品的上下架更新
+    /**
+     * Description: 
+     * This method handler is to handle the request to set the sale status of product to let the product on sale or off the shelves.
+     *    sale status: 1 - onsale,  2 - off the shelves
+     * 
+     * @param productId
+     * @param status
+     * @return
      */
     @RequestMapping("set_sale_status.do")
     @ResponseBody
@@ -57,19 +79,29 @@ public class ProductManageController {
     	return iProductService.setSaleStatus(productId,status);
     }
 
-    /*
-     * 获取商品详情功能
+    /**
+     * Description: 
+     * This method handler is to handle the request to get the details of one product.
+     * 
+     * @param productId
+     * @return
      */
     @RequestMapping("detail.do")
     @ResponseBody
     public ServerResponse getDetail(Integer productId){
+    	
+    	//get the details of product by filtering productId
     	return iProductService.manageProductDetail(productId);
     }
  
-    /*
-     * 获取产品列表->列表要做动态分页(内嵌com.github.pagehelper.pagehelper来做动态分页)
-     * pageNum是第几页,默认为1
-     * pageSize是页面容量,默认为10
+    /**
+     * Description: 
+     * This method handler is to handle the request to get the list of product by pageNum and pageSize in background system.
+     * 	pageNum is default as 1, and pageSize is default as 10.
+     * 
+     * @param pageNum
+     * @param pageSize
+     * @return
      */
     @RequestMapping("list.do")
     @ResponseBody
@@ -77,8 +109,15 @@ public class ProductManageController {
     	 return iProductService.getProductList(pageNum,pageSize);
     }
     
-    /*
-     * 根据productId或productName进行产品搜索
+    /**
+     * Description: 
+     * This method handler is to handle the request to search product by filtering productName and productId in background system.
+     * 
+     * @param productName
+     * @param productId
+     * @param pageNum
+     * @param pageSize
+     * @return
      */
     @RequestMapping("search.do")
     @ResponseBody
@@ -86,25 +125,40 @@ public class ProductManageController {
     	return iProductService.searchProduct(productName,productId,pageNum,pageSize);
     }
 
-    /*
-     * SpringMVC 文件上传
-     * @param MultipartFile file ->SpringMVC的文件上传
-     * @param HttpServletRequest request ->可以根据上下文动态地创建相对路径出来
-     * @RequestParam->可以指定前端入参的参数名,如在index.jsp中, ,required = false表示入参不是必须的
+    /**
+     * Description: 
+     * This method handler is to handle the request to upload file(like text file) to ftp server.
+     * 
+     * @param request
+     * @param file
+     * @return
      */
     @RequestMapping("upload.do")
     @ResponseBody
   public ServerResponse upload(HttpServletRequest request, @RequestParam(value = "upload_file",required = false) MultipartFile file){
+    	//Get the path of upload file(in this backend server) which temporarily save the upload_file
     	String path = request.getSession().getServletContext().getRealPath("upload");
+    	//Upload the file from this backend server to ftp server
         String targetFileName = iFileService.upload(file,path);
+        //split join the url of file in ftp server for responding
         String url = PropertiesUtil.getStringProperty("ftp.server.http.prefix")+targetFileName;
 
+        //Response with fileMap
         Map fileMap = Maps.newHashMap();
         fileMap.put("uri",targetFileName);
         fileMap.put("url",url);
         return ServerResponse.createBySuccess(fileMap);
     }
 
+    /**
+     * Description: 
+     * This method handler is to handle the request to upload rich text and image to system server.
+     * 
+     * @param request
+     * @param response
+     * @param file
+     * @return
+     */
     /*
      * 富文本文件上传
      */
@@ -112,19 +166,25 @@ public class ProductManageController {
     @ResponseBody
     public Map richtextImgUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "upload_file",required = false) MultipartFile file){
     	Map resultMap = Maps.newHashMap();
+    	
+    	//Get the path of upload file(in this backend server) which temporarily save the upload_file
     	String path = request.getSession().getServletContext().getRealPath("upload");
-        String targetFileName = iFileService.upload(file,path);
+        
+    	//Upload the file from this backend server to ftp server
+    	String targetFileName = iFileService.upload(file,path);
         if(StringUtils.isBlank(targetFileName)){
             resultMap.put("success",false);
-            resultMap.put("msg","上传失败");
+            resultMap.put("msg",Const.ErrorMessage.UPLOAD_FILE_FAILED);
             return resultMap;
         }
+        
+        //split join the url of file in ftp server for responding
         String url = PropertiesUtil.getStringProperty("ftp.server.http.prefix")+targetFileName;
         resultMap.put("success",true);
-        resultMap.put("msg","上传成功");
+        resultMap.put("msg",Const.ErrorMessage.UPLOAD_FILE_SUCCESS);
         resultMap.put("file_path",url);
         
-        //富文本上传需要修改HttpServletResponse的header
+        //Need to reset header in HttpServletResponse for the upload of rich text and image
         response.addHeader("Access-Control-Allow-Headers","X-File-Name");
         return resultMap;
     }
