@@ -10,12 +10,12 @@
         </filter>
     </appender>
 
-    <appender name="mmall" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!--<File>d:/mmalllog/mmall.log</File>-->
-        <File>D:/Tomcat/apache-tomcat-8.5.31-windows-x64/apache-tomcat-8.5.31/logs/mmall.log</File>
+    <appender name="eshop" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--<File>d:/eshoplog/eshop.log</File>-->
+        <File>D:/Tomcat/apache-tomcat-8.5.31-windows-x64/apache-tomcat-8.5.31/logs/eshop.log</File>
         <!-- 按天来rolling日志 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>D:/Tomcat/apache-tomcat-8.5.31-windows-x64/apache-tomcat-8.5.31/logs/mmall.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <fileNamePattern>D:/Tomcat/apache-tomcat-8.5.31-windows-x64/apache-tomcat-8.5.31/logs/eshop.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
             <append>true</append>
             <!-- 最大的存储时期,即存10天 -->
             <maxHistory>10</maxHistory>
@@ -27,11 +27,11 @@
 
 
     <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <!--<File>d:/mmalllog/error.log</File>-->
+        <!--<File>d:/eshoplog/error.log</File>-->
         <File>D:/Tomcat/apache-tomcat-8.5.31-windows-x64/apache-tomcat-8.5.31/logs/error.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>D:/Tomcat/apache-tomcat-8.5.31-windows-x64/apache-tomcat-8.5.31/logs/error.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
-            <!--<fileNamePattern>d:/mmalllog/error.log.%d{yyyy-MM-dd}.gz</fileNamePattern>-->
+            <!--<fileNamePattern>d:/eshoplog/error.log.%d{yyyy-MM-dd}.gz</fileNamePattern>-->
             <append>true</append>
             <maxHistory>10</maxHistory>
         </rollingPolicy>
@@ -48,8 +48,8 @@
 
 	<!-- additivity=false->为了让日志不向上继承 -->
     <logger name="com.eshop" additivity="false" level="INFO" >
-    	<!-- logger会打印到mmall和console(catalina)上 -->
-        <appender-ref ref="mmall" />
+    	<!-- logger会打印到eshop和console(catalina)上 -->
+        <appender-ref ref="eshop" />
         <appender-ref ref="console"/>
     </logger>
 

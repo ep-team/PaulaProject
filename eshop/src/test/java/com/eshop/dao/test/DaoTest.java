@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 /**
- * Created by Paula on mmall.
+ * Created by Paula on shop.
  */
 public class DaoTest extends TestBase {
 

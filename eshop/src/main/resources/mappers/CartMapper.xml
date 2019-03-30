@@ -18,15 +18,15 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from mmall_cart
+    from eshop_cart
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from mmall_cart
+    delete from eshop_cart
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.eshop.pojo.Cart">
-    insert into mmall_cart (id, user_id, product_id, 
+    insert into eshop_cart (id, user_id, product_id, 
       quantity, checked, create_time, 
       update_time)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, 
@@ -34,7 +34,7 @@
       now())
   </insert>
   <insert id="insertSelective" parameterType="com.eshop.pojo.Cart">
-    insert into mmall_cart
+    insert into eshop_cart
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -83,7 +83,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.eshop.pojo.Cart">
-    update mmall_cart
+    update eshop_cart
     <set>
       <if test="userId != null">
         user_id = #{userId,jdbcType=INTEGER},
@@ -107,7 +107,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.eshop.pojo.Cart">
-    update mmall_cart
+    update eshop_cart
     set user_id = #{userId,jdbcType=INTEGER},
       product_id = #{productId,jdbcType=INTEGER},
       quantity = #{quantity,jdbcType=INTEGER},
@@ -120,7 +120,7 @@
   <select id="selectCartByUserIdProductId" resultMap="BaseResultMap" parameterType="map">
     SELECT
     <include refid="Base_Column_List"/>
-    from mmall_cart
+    from eshop_cart
     where user_id = #{userId}
     and product_id = #{productId}
   </select>
@@ -130,17 +130,17 @@
   <select id="selectCartByUserId" resultMap="BaseResultMap" parameterType="int">
     SELECT
     <include refid="Base_Column_List"/>
-    from mmall_cart
+    from eshop_cart
     where user_id = #{userId}
   </select>
 
   <select id="selectCartProductCheckedStatusByUserId" resultType="int" parameterType="int">
-    SELECT  count(1) from mmall_cart where checked = 0 and user_id = #{userId}
+    SELECT  count(1) from eshop_cart where checked = 0 and user_id = #{userId}
   </select>
   
   
   <delete id="deleteByUserIdProductIds" parameterType="map">
-    delete from mmall_cart
+    delete from eshop_cart
     where user_id = #{userId}
     <if test="productIdList != null">
       and product_id in
@@ -153,7 +153,7 @@
 
 
   <update id="checkedOrUncheckedProduct" parameterType="map">
-    UPDATE  mmall_cart
+    UPDATE  eshop_cart
     set checked = #{checked},
     update_time = now()
     where user_id = #{userId}
@@ -164,7 +164,7 @@
 
 
   <select id="selectCartProductCount" parameterType="int" resultType="int">
-    select IFNULL(sum(quantity),0) as count from mmall_cart where user_id = #{userId}
+    select IFNULL(sum(quantity),0) as count from eshop_cart where user_id = #{userId}
   </select>
 
 
@@ -172,7 +172,7 @@
   <select id="selectCheckedCartByUserId" parameterType="int" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List"/>
-    from mmall_cart
+    from eshop_cart
     where user_id = #{userId}
     and checked = 1
   </select>

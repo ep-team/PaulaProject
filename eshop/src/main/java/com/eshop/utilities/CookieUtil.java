@@ -15,10 +15,10 @@ public class CookieUtil {
 
 	private static Logger logger = LoggerFactory.getLogger(CookieUtil.class);
 	
-	//".suppermmall.com"是一级域名,二级域名及以上可以读到该cookie..... "xxx.suppermmall.com"是二级域名
-	private final static String COOKIE_DOMAIN = "suppermmall.com";
+	//".eshop.com"是一级域名,二级域名及以上可以读到该cookie..... "xxx.eshop.com"是二级域名
+	private final static String COOKIE_DOMAIN = "eshop.com";
 	//COOKIE_NAME是服务端要种到客户端浏览器上的
-	private final static String COOKIE_NAME = "mmall_login_token";
+	private final static String COOKIE_NAME = "eshop_login_token";
 	
 	//读cookie
 	public static String readLoginToken(HttpServletRequest request) {
@@ -38,17 +38,10 @@ public class CookieUtil {
 	}
 	
 		
-	//X:domain=".suppermmall.com"
-	//a站点:A.suppermmall.com                 cookie:domain=A.suppermmall.com;path="/"
-	//b站点:B.suppermmall.com                 cookie:domain=B.suppermmall.com;path="/"
-	//c站点:A.suppermmall.com/test/cc         cookie:domain=A.suppermmall.com;path="/test/cc"
-	//d站点:A.suppermmall.com/test/dd         cookie:domain=A.suppermmall.com;path="/test/dd"
-	//e站点:A.suppermmall.com/test            cookie:domian=A.suppermmall.com;path="/test"
-	//a拿不到b的cookie, b也拿不到a的cookie ; c和d能共享a的cookie,也能共享e的cookie, 但但不到b的cookie, c拿不到d的cookie, d拿不到c的cookie
 	
 	//用户登录时写入cookie
 	public static void writeLoginToken(HttpServletResponse response, String token) {
-		//cookie种在.suppermmall.com,那么www.suppermmall.com和user.suppermmall.com都可以获取到相同的cookie
+		//cookie种在.eshop.com,那么www.eshop.com和user.eshop.com都可以获取到相同的cookie
 		Cookie cookie = new Cookie(COOKIE_NAME, token);
 		cookie.setDomain(COOKIE_DOMAIN);
 		//path为"/"表示路径为根目录,, 如果path为"test", 那么只有"test"目录及其子目录下的页面和代码才能获取到cookie

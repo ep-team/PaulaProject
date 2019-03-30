@@ -21,15 +21,15 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from mmall_user
+    from eshop_user
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from mmall_user
+    delete from eshop_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.eshop.pojo.User">
-    insert into mmall_user (id, username, password, 
+    insert into eshop_user (id, username, password, 
       email, phone, question, 
       answer, role, create_time, 
       update_time)
@@ -39,7 +39,7 @@
       now())
   </insert>
   <insert id="insertSelective" parameterType="com.eshop.pojo.User">
-    insert into mmall_user
+    insert into eshop_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -106,7 +106,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.eshop.pojo.User">
-    update mmall_user
+    update eshop_user
     <set>
       <if test="username != null">
         username = #{username,jdbcType=VARCHAR},
@@ -139,7 +139,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.eshop.pojo.User">
-    update mmall_user
+    update eshop_user
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
@@ -153,41 +153,41 @@
   </update>
   
   <select id="checkUserName" resultType="int" parameterType="String">
-  	select count(1) from mmall_user where username = #{username}
+  	select count(1) from eshop_user where username = #{username}
   </select>
   
   <select id="checkUserByEamil" resultType="int" parameterType="String">
-  	select count(1) from mmall_user where email = #{email}
+  	select count(1) from eshop_user where email = #{email}
   </select>
   
   <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
   	<!-- 要什么查什么,不要select *, 多部门开发时,可能会给数据库加字段,而你的代码中可能没有可支持的字段时容易保存 -->
   	select
   	<include refid="Base_Column_List" />
-    from mmall_user
+    from eshop_user
     where username = #{username} and password = #{password}
   </select>
   
   <select id="selectQuestionByUsername" resultType="String" parameterType="String">
-  	select question from mmall_user where username = #{username} 
+  	select question from eshop_user where username = #{username} 
   </select>
   
   <select id="checkEmailByUserId" resultType="int" parameterType="map">
-  	select count(1) from mmall_user where email = #{email} and id != #{userId}
+  	select count(1) from eshop_user where email = #{email} and id != #{userId}
   </select>
   
   <select id="checkAnswer" resultType="int" parameterType="map">
-  	select count(1) from mmall_user 
+  	select count(1) from eshop_user 
   	where username = #{username} and question = #{question} and answer = #{answer}
   </select>
   
   <update id="updatePasswordByUsername"  parameterType="map">
-  	update mmall_user 
+  	update eshop_user 
   	set password=#{passwordNew}, update_time=now()
   	where username = #{username}
   </update>
   
   <select id="checkPassword" resultType="int" parameterType="map">
-  	select count(1) from mmall_user where id=#{userId} and password = #{password}
+  	select count(1) from eshop_user where id=#{userId} and password = #{password}
   </select>
 </mapper>

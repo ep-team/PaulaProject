@@ -114,7 +114,7 @@ public class ProductServiceImpl implements IProductService {
         productDetailVo.setStock(product.getStock());
 
         //将配置与代码隔离,如果ftp服务器连接修改,只需要修改配置文件,不需要修改代码,以后会优化为热部署配置 
-        productDetailVo.setImageHost(PropertiesUtil.getStringProperty("ftp.server.http.prefix","http://img.happymmall.com/"));
+        productDetailVo.setImageHost(PropertiesUtil.getStringProperty("ftp.server.http.prefix","http://img.eshop.com/"));
 
         Category category = categoryMapper.selectByPrimaryKey(product.getCategoryId());
         if(category == null){
@@ -154,7 +154,7 @@ public class ProductServiceImpl implements IProductService {
         productListVo.setId(product.getId());
         productListVo.setName(product.getName());
         productListVo.setCategoryId(product.getCategoryId());
-        productListVo.setImageHost(PropertiesUtil.getStringProperty("ftp.server.http.prefix","http://img.happymmall.com/"));
+        productListVo.setImageHost(PropertiesUtil.getStringProperty("ftp.server.http.prefix","http://img.eshop.com/"));
         productListVo.setMainImage(product.getMainImage());
         productListVo.setPrice(product.getPrice());
         productListVo.setSubtitle(product.getSubtitle());
