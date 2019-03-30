@@ -16,6 +16,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * Description: 
+ * This is the controller to handle the request to ask for listing products with searching criteria:
+ *      1. List product details by filtering productId 
+ * 		2. List products by filtering keyword and categoryId
+ *      3. List products by filtering keyword
+ *      4. List products by filtering categoryId
+ * 
+ * @author Paula Lin
+ *
+ */
 @Controller
 @RequestMapping("/product/")
 public class ProductController {
@@ -24,47 +35,33 @@ public class ProductController {
     @Autowired
     private IProductService iProductService;
 
-    /*
-     * 前台查看商品详情
+    /**
+     * Description: 
+     * This method handler is to list product details by filtering productId
+     * 
+     * @param productId
+     * @return
      */
-  //二期-start
-    /*@RequestMapping("detail.do")
-    @ResponseBody
-    public ServerResponse<ProductDetailVo> detail(Integer productId){
-        return iProductService.getProductDetail(productId);
-    }
-    */
-    //改造成restful
     @RequestMapping(value = "/{productId}", method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse<ProductDetailVo> detailRESTful(@PathVariable Integer productId){
+    public ServerResponse<ProductDetailVo> getProductDetail(@PathVariable Integer productId){
         return iProductService.getProductDetail(productId);
     }
-  //二期-end
-
-    
-    
-    /*
-     * 前台用户搜索请求
-     * 由于返回值是分页列表,故为ServerResponse<PageInfo>
-     * @RequestParam中的required默认为true, 即为mandatory
+  
+    /**
+     * Description: 
+     * This method handler is to list product details by filtering keyword and categoryId
+     * 
+     * @param keyword
+     * @param categoryId
+     * @param pageNum
+     * @param pageSize
+     * @param orderBy
+     * @return
      */
-  //二期-start
-  /*  @RequestMapping("list.do")
-    @ResponseBody
-    public ServerResponse<PageInfo> list(@RequestParam(value = "keyword",required = false)String keyword,
-                                         @RequestParam(value = "categoryId",required = false)Integer categoryId,
-                                         @RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
-                                         @RequestParam(value = "pageSize",defaultValue = "10") int pageSize,
-                                         @RequestParam(value = "orderBy",defaultValue = "") String orderBy){
-        return iProductService.getProductByKeywordCategory(keyword,categoryId,pageNum,pageSize,orderBy);
-    }
-*/
-    //改造成restful, 但对于必须填, 只能逻辑上来添加
-    //http://www.happymmall.com/product/手机/100012/1/10/price_asc
     @RequestMapping(value = "/{keyword}/{categoryId}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse<PageInfo> list(@PathVariable(value = "keyword")String keyword,
+    public ServerResponse<PageInfo> listProductsByKeywordAndCategory(@PathVariable(value = "keyword")String keyword,
                                          @PathVariable(value = "categoryId")Integer categoryId,
                                          @PathVariable(value = "pageNum") Integer pageNum,
                                          @PathVariable(value = "pageSize") Integer pageSize,
@@ -82,56 +79,19 @@ public class ProductController {
         return iProductService.getProductByKeywordCategory(keyword,categoryId,pageNum,pageSize,orderBy);
     }
 
-/*
-    //用于兼容keyword不传的情况
-   //  http://www.happymmall.com/product/100012/1/10/price_asc, 不能区分请求的是"/{categoryId}/{pageNum}/{pageSize}/{orderBy}"
-    //还是 "/{keyword}/{pageNum}/{pageSize}/{orderBy}"
-  @RequestMapping(value = "/{categoryId}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
-  @ResponseBody
-  public ServerResponse<PageInfo> listBadcase(@PathVariable(value = "categoryId")Integer categoryId,
-                                              @PathVariable(value = "pageNum") Integer pageNum,
-                                              @PathVariable(value = "pageSize") Integer pageSize,
-                                              @PathVariable(value = "orderBy") String orderBy){
-      if(pageNum == null){
-          pageNum = 1;
-      }
-      if(pageSize == null){
-          pageSize = 10;
-      }
-      if(StringUtils.isBlank(orderBy)){
-          orderBy = "price_asc";
-      }
-
-      return iProductService.getProductByKeywordCategory("",categoryId,pageNum,pageSize,orderBy);
-  }
-
-   //用于兼容categoryId不传的情况
-  @RequestMapping(value = "/{keyword}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
-  @ResponseBody
-  public ServerResponse<PageInfo> listBadcase(@PathVariable(value = "keyword")String keyword,
-                                              @PathVariable(value = "pageNum") Integer pageNum,
-                                              @PathVariable(value = "pageSize") Integer pageSize,
-                                              @PathVariable(value = "orderBy") String orderBy){
-      if(pageNum == null){
-          pageNum = 1;
-      }
-      if(pageSize == null){
-          pageSize = 10;
-      }
-      if(StringUtils.isBlank(orderBy)){
-          orderBy = "price_asc";
-      }
-
-      return iProductService.getProductByKeywordCategory(keyword,null,pageNum,pageSize,orderBy);
-  }
-*/
-    
-//用于兼容keyword不传的情况
-    //自定义资源占位keyword, 来将模棱两可的请求进行区分, keyword代表第一个资源占位是以keyword开始的
-  //http://www.happymmall.com/product/keyword/手机/1/10/price_asc
+  /**
+   * Description: 
+   * This method handler is to list product details by filtering keyword
+   * 
+   * @param keyword
+   * @param pageNum
+   * @param pageSize
+   * @param orderBy
+   * @return
+   */
   @RequestMapping(value = "/keyword/{keyword}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
   @ResponseBody
-  public ServerResponse<PageInfo> list(@PathVariable(value = "keyword")String keyword,
+  public ServerResponse<PageInfo> listProductsByKeyword(@PathVariable(value = "keyword")String keyword,
                                                      @PathVariable(value = "pageNum") Integer pageNum,
                                                      @PathVariable(value = "pageSize") Integer pageSize,
                                                      @PathVariable(value = "orderBy") String orderBy){
@@ -148,12 +108,19 @@ public class ProductController {
       return iProductService.getProductByKeywordCategory(keyword,null,pageNum,pageSize,orderBy);
   }
 
-//用于兼容categoryId不传的情况
-//自定义资源占位category, 来将模棱两可的请求进行区分, category代表第一个资源占位是以category开始的
-  //http://www.happymmall.com/product/category/100012/1/10/price_asc
+  /**
+   * Description: 
+   * This method handler is to list product details by filtering categoryId
+   * 
+   * @param categoryId
+   * @param pageNum
+   * @param pageSize
+   * @param orderBy
+   * @return
+   */
   @RequestMapping(value = "/category/{categoryId}/{pageNum}/{pageSize}/{orderBy}",method = RequestMethod.GET)
   @ResponseBody
-  public ServerResponse<PageInfo> list(@PathVariable(value = "categoryId")Integer categoryId,
+  public ServerResponse<PageInfo> listProductsByCategory(@PathVariable(value = "categoryId")Integer categoryId,
                                                      @PathVariable(value = "pageNum") Integer pageNum,
                                                      @PathVariable(value = "pageSize") Integer pageSize,
                                                      @PathVariable(value = "orderBy") String orderBy){
@@ -169,6 +136,5 @@ public class ProductController {
 
       return iProductService.getProductByKeywordCategory("",categoryId,pageNum,pageSize,orderBy);
   }
-  //二期-end
 
 }
