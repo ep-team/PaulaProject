@@ -308,6 +308,12 @@
 			<artifactId>alipay_trade</artifactId>
 			<version>20161213</version>
 		</dependency>
+		<!-- JUnit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8</version>
+		</dependency>
 	</dependencies>
 
 	<build>
