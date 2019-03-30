@@ -52,11 +52,12 @@ public class UserController {
 	private IUserService iUserService;
 	
 	/**
-	 * @param user
-	 * @return
 	 * 
 	 * Description:
 	 * This method handler is provided to receive new user's registration.
+	 * 
+	 * @param user
+	 * @return
 	 */
 	@RequestMapping(value="register.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -66,14 +67,15 @@ public class UserController {
 	
 	/**
 	 * 
+	 * Description:
+	 * This method handler is provided for user access and related validation.
+	 * 
 	 * @param username
 	 * @param password
 	 * @param session
 	 * @param httpServletResponse
 	 * @return
 	 * 
-	 * Description:
-	 * This method handler is provided for user access and related validation.
 	 */
 	@RequestMapping(value="login.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -92,13 +94,14 @@ public class UserController {
 	
 	/**
 	 * 
+	 * Description:
+	 * This method handler is provided for user logout.
+	 * 
 	 * @param session
 	 * @param httpServletRequest
 	 * @param httpServletResponse
 	 * @return
 	 * 
-	 * Description:
-	 * This method handler is provided for user logout.
 	 */
 	@RequestMapping(value="logout.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -115,12 +118,13 @@ public class UserController {
 	
 	/**
 	 * 
+	 * Description:
+	 * This method handler is provided for user logout.
+	 * 
 	 * @param value
 	 * @param type
 	 * @return
 	 * 
-	 * Description:
-	 * This method handler is provided for user information validation.
 	 */
 	@RequestMapping(value="check_valid.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -132,11 +136,12 @@ public class UserController {
 		
 	/**
 	 * 
+	 * Description:
+	 * This method handler is provided to get secrete question for further password resetting when user forget original password.
+	 * 
 	 * @param username
 	 * @return
 	 * 
-	 * Description:
-	 * This method handler is provided to get secrete question for further password resetting when user forget original password.
 	 */
 	@RequestMapping(value="forget_pwd_get_secretQuestion.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -147,13 +152,14 @@ public class UserController {
 	
 	/**
 	 * 
+	 * Description:
+	 * This method handler is provided to check user's answers for secret questions when forget original password.
+	 * 
 	 * @param username
 	 * @param question
 	 * @param answer
 	 * @return
 	 * 
-	 * Description:
-	 * This method handler is provided to check user's answers for secret questions when forget original password.
 	 */
 	@RequestMapping(value="forget_pwd_check_answer.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -164,13 +170,14 @@ public class UserController {
 	
 	/**
 	 * 
+	 * Description:
+	 * This method handler is provided to reset user's password when forget original password
+	 * 
 	 * @param username
 	 * @param passwordNew
 	 * @param forgetToken
 	 * @return
 	 * 
-	 * Description:
-	 * This method handler is provided to reset user's password when forget original password
 	 */
 	@RequestMapping(value="forget_reset_password.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -180,13 +187,14 @@ public class UserController {
 	}
 	
 	/**
+	 * Description:
+	 * This method handler is provided to reset user's password after user login and with old password
+	 * 
 	 * @param httpServletRequest
 	 * @param passwordOld
 	 * @param passwordNew
 	 * @return
 	 * 
-	 * Description:
-	 * This method handler is provided to reset user's password after user login and with old password
 	 */
 	@RequestMapping(value="reset_password.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -212,11 +220,12 @@ public class UserController {
 	}
 	
 	/**
+	 * Description:
+	 * This method handler is provided to get user's information
+	 * 
 	 * @param httpServletRequest
 	 * @return
 	 * 
-	 * Description:
-	 * This method handler is provided to get user's information
 	 */
 	@RequestMapping(value="get_user_info.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -246,12 +255,13 @@ public class UserController {
 	
 	/**
 	 * 
+	 * Description:
+	 * This method handler is provided to update user's information
+	 * 
 	 * @param httpServletRequest
 	 * @param user
 	 * @return
 	 * 
-	 * Description:
-	 * This method handler is provided to update user's information
 	 */
 	@RequestMapping(value="update_infomation.do", method = RequestMethod.POST)
 	@ResponseBody
