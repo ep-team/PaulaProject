@@ -23,6 +23,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+/**
+ * Description: 
+ * This is the controller to handle the request to search or change user's shipping address:
+ * 		1.	Add new shipping address.
+ *		2.	Delete shipping address.
+ *		3.	Update shipping address.
+ *		4.	Select shipping address.
+ *		5.	List shipping address and paginate it.
+
+ * 
+ * @author Paula Lin
+ *
+ */
 @Controller
 @RequestMapping("/shipping/")
 public class ShippingController {
@@ -32,108 +45,158 @@ public class ShippingController {
     @Autowired
     private IShippingService iShippingService;
 
-
-    @RequestMapping("add.do")
+    /**
+     * Description: 
+     * This method handler is handle the request to add new shipping address.
+     * 
+     * @param httpServletRequest
+     * @param shipping
+     * @return
+     */
+    @RequestMapping("newShippingAddress.do")
     @ResponseBody
-    //二期修改-start
-    //public ServerResponse add(HttpSession session,Shipping shipping){
-    public ServerResponse add(HttpServletRequest httpServletRequest,Shipping shipping){
-        //User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse newShippingAddress(HttpServletRequest httpServletRequest,Shipping shipping){
+    	
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+	
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
+		//Transfer json string of user info to User object.
 		User user = JsonUtil.string2Obj(userJsonStr, User.class);		
-     //二期修改-end
 		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iShippingService.add(user.getId(),shipping);
+        
+        return iShippingService.addShippingAddress(user.getId(),shipping);
     }
 
-
-    @RequestMapping("del.do")
+    /**
+     * Description: 
+     * This method handler is handle the request to delete an existing shipping address.
+     * 
+     * @param httpServletRequest
+     * @param shippingId
+     * @return
+     */
+    @RequestMapping("deleteShippingAddress.do")
     @ResponseBody
-    //二期修改-start
-    //public ServerResponse del(HttpSession session,Integer shippingId){
-    public ServerResponse del(HttpServletRequest httpServletRequest,Integer shippingId){
-        //User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse deleteShippingAddress(HttpServletRequest httpServletRequest,Integer shippingId){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+    	
+    	//Check if loginToken is empty
+    	if(StringUtils.isEmpty(loginToken)) {
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
-		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User user = JsonUtil.string2Obj(userJsonStr, User.class);		
-     //二期修改-end
+    	//Retrieve json string of user information from Redis according to loginToken
+    	String userJsonStr = RedisPoolUtil.get(loginToken);
+    	//Transfer json string of user info to User object.
+    	User user = JsonUtil.string2Obj(userJsonStr, User.class);		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iShippingService.del(user.getId(),shippingId);
+        return iShippingService.deleteShippingAddress(user.getId(),shippingId);
     }
 
-    @RequestMapping("update.do")
+    /**
+     * Description: 
+     * This method handler is handle the request to update shipping address.
+     * 
+     * @param httpServletRequest
+     * @param shipping
+     * @return
+     */
+    @RequestMapping("updateShippingAddress.do")
     @ResponseBody
-  //二期修改-start
-    //public ServerResponse update(HttpSession session,Shipping shipping){
-    public ServerResponse update(HttpServletRequest httpServletRequest,Shipping shipping){
-    
-        //User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse updateShippingAddress(HttpServletRequest httpServletRequest,Shipping shipping){
+    	
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+		
+    	//Check if loginToken is empty
+    	if(StringUtils.isEmpty(loginToken)) {
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
-		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User user = JsonUtil.string2Obj(userJsonStr, User.class);		
-     //二期修改-end
+		
+    	//Retrieve json string of user information from Redis according to loginToken
+    	String userJsonStr = RedisPoolUtil.get(loginToken);
+    	//Transfer json string of user info to User object.
+    	User user = JsonUtil.string2Obj(userJsonStr, User.class);		
 		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iShippingService.update(user.getId(),shipping);
+        return iShippingService.updateShippingAddress(user.getId(),shipping);
     }
 
-
-    @RequestMapping("select.do")
+    /**
+     * Description: 
+     * This method handler is handle the request to select shipping address.
+     * 
+     * @param httpServletRequest
+     * @param shippingId
+     * @return
+     */
+    @RequestMapping("selectShippingAddress.do")
     @ResponseBody
-  //二期修改-start
-    //public ServerResponse<Shipping> select(HttpSession session,Integer shippingId){
-    public ServerResponse<Shipping> select(HttpServletRequest httpServletRequest,Integer shippingId){
-        //User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<Shipping> selectShippingAddress(HttpServletRequest httpServletRequest,Integer shippingId){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User user = JsonUtil.string2Obj(userJsonStr, User.class);		
-     //二期修改-end
+		//Transfer json string of user info to User object.
+		User user = JsonUtil.string2Obj(userJsonStr, User.class);
+		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
         return iShippingService.select(user.getId(),shippingId);
     }
 
-
-    @RequestMapping("list.do")
+    /**
+     * Description: 
+     * This method handler is handle the request to list all the shipping address and paginate it.
+     * 
+     * @param pageNum
+     * @param pageSize
+     * @param httpServletRequest
+     * @return
+     */
+    @RequestMapping("listShippingAddress.do")
     @ResponseBody
-    public ServerResponse<PageInfo> list(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
+    public ServerResponse<PageInfo> listShippingAddress(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
                                          @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
-    //二期修改-start 
-      //                                 HttpSession session){
                                          HttpServletRequest httpServletRequest){
-        //User user = (User)session.getAttribute(Const.CURRENT_USER);
-        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        
+    	//Retrieve loginToken from request
+    	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User user = JsonUtil.string2Obj(userJsonStr, User.class);		
-     //二期修改-end
+		//Transfer json string of user info to User object.
+		User user = JsonUtil.string2Obj(userJsonStr, User.class);
+		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iShippingService.list(user.getId(),pageNum,pageSize);
+        return iShippingService.listShippingAddress(user.getId(),pageNum,pageSize);
     }
 
 

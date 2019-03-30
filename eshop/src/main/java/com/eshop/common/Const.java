@@ -23,10 +23,10 @@ public class Const {
 	}
 	
 	public interface  ErrorMessage{
-		String USER_NOT_LOGIN = "User is not logged in!";
+		String USER_NOT_LOGIN = "User is not logged in! Failed to get the user's information!";
 		String USER_IS_NOT_ADMIN = "User is not admin, could not login backgound system!";
 		String UPLOAD_FILE_FAILED = "Failed to upload file!";
-		String UPLOAD_FILE_SUCCESS = "Succeed to upload file!"
+		String UPLOAD_FILE_SUCCESS = "Succeed to upload file!";
     }
 	
 	//Product搜索中, 排序规则定义, price是orderBy的字段, desc和asc是降序和升序
