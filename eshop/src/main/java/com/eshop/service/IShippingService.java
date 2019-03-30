@@ -14,7 +14,7 @@ public interface IShippingService {
 	 * @param shipping
 	 * @return
 	 */
-    ServerResponse add(Integer userId, Shipping shipping);
+    ServerResponse addShippingAddress(Integer userId, Shipping shipping);
     
     /**
      * 
@@ -22,7 +22,7 @@ public interface IShippingService {
      * @param shippingId
      * @return
      */
-    ServerResponse<String> del(Integer userId,Integer shippingId);
+    ServerResponse<String> deleteShippingAddress(Integer userId,Integer shippingId);
     
     /**
      * 
@@ -30,7 +30,7 @@ public interface IShippingService {
      * @param shipping
      * @return
      */
-    ServerResponse update(Integer userId, Shipping shipping);
+    ServerResponse updateShippingAddress(Integer userId, Shipping shipping);
     
     /**
      * 
@@ -38,7 +38,7 @@ public interface IShippingService {
      * @param shippingId
      * @return
      */
-    ServerResponse<Shipping> select(Integer userId, Integer shippingId);
+    ServerResponse<Shipping> selectShippingAddress(Integer userId, Integer shippingId);
     
     /**
      * 
@@ -47,6 +47,6 @@ public interface IShippingService {
      * @param pageSize
      * @return
      */
-    ServerResponse<PageInfo> list(Integer userId, int pageNum, int pageSize);
+    ServerResponse<PageInfo> listShippingAddress(Integer userId, int pageNum, int pageSize);
 
 }
