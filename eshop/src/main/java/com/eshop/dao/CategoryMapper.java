@@ -5,17 +5,17 @@ import java.util.List;
 import com.eshop.pojo.Category;
 
 public interface CategoryMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteCategoryByPrimaryKey(Integer id);
 
-    int insert(Category record);
+    int insertCategory(Category record);
 
-    int insertSelective(Category record);
+    int insertCategorySelective(Category record);
 
-    Category selectByPrimaryKey(Integer id);
+    Category selectCategoryByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(Category record);
+    int updateCategoryByPrimaryKeySelective(Category record);
 
-    int updateByPrimaryKey(Category record);
+    int updateCategoryByPrimaryKey(Category record);
     
-    List<Category> selectCategoryChildrenByParentId(Integer parentId);
+    List<Category> selectCategoryChildrensByParentId(Integer parentId);
 }

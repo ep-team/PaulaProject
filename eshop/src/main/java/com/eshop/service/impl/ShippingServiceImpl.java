@@ -29,7 +29,7 @@ public class ShippingServiceImpl implements IShippingService {
 
     public ServerResponse add(Integer userId, Shipping shipping){
         shipping.setUserId(userId);
-        int rowCount = shippingMapper.insert(shipping);
+        int rowCount = shippingMapper.insertShipping(shipping);
         if(rowCount > 0){
             Map result = Maps.newHashMap();
             result.put("shippingId",shipping.getId());
@@ -39,7 +39,7 @@ public class ShippingServiceImpl implements IShippingService {
     }
 
     public ServerResponse<String> del(Integer userId,Integer shippingId){
-        int resultCount = shippingMapper.deleteByShippingIdUserId(userId,shippingId);
+        int resultCount = shippingMapper.deleteShipingByShippingIdUserId(userId,shippingId);
         if(resultCount > 0){
             return ServerResponse.createBySuccess("删除地址成功");
         }
@@ -49,7 +49,7 @@ public class ShippingServiceImpl implements IShippingService {
 
     public ServerResponse update(Integer userId, Shipping shipping){
         shipping.setUserId(userId);
-        int rowCount = shippingMapper.updateByShipping(shipping);
+        int rowCount = shippingMapper.updateShippingByShipping(shipping);
         if(rowCount > 0){
             return ServerResponse.createBySuccess("更新地址成功");
         }
@@ -57,7 +57,7 @@ public class ShippingServiceImpl implements IShippingService {
     }
 
     public ServerResponse<Shipping> select(Integer userId, Integer shippingId){
-        Shipping shipping = shippingMapper.selectByShippingIdUserId(userId,shippingId);
+        Shipping shipping = shippingMapper.selectShippingByShippingIdUserId(userId,shippingId);
         if(shipping == null){
             return ServerResponse.createByErrorMessage("无法查询到该地址");
         }
@@ -67,7 +67,7 @@ public class ShippingServiceImpl implements IShippingService {
 
     public ServerResponse<PageInfo> list(Integer userId,int pageNum,int pageSize){
         PageHelper.startPage(pageNum,pageSize);
-        List<Shipping> shippingList = shippingMapper.selectByUserId(userId);
+        List<Shipping> shippingList = shippingMapper.selectShippingByUserId(userId);
         PageInfo pageInfo = new PageInfo(shippingList);
         return ServerResponse.createBySuccess(pageInfo);
     }

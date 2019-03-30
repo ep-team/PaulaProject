@@ -38,7 +38,7 @@ public class CategoryServiceImpl implements ICategoryService {
         category.setParentId(parentId);
         category.setStatus(true);//这个分类是可用的
 
-        int rowCount = categoryMapper.insert(category);
+        int rowCount = categoryMapper.insertCategory(category);
         if(rowCount > 0){
             return ServerResponse.createBySuccess("添加品类成功");
         }
@@ -53,7 +53,7 @@ public class CategoryServiceImpl implements ICategoryService {
         category.setId(categoryId);
         category.setName(categoryName);
 
-        int rowCount = categoryMapper.updateByPrimaryKeySelective(category);
+        int rowCount = categoryMapper.updateCategoryByPrimaryKeySelective(category);
         if(rowCount > 0){
             return ServerResponse.createBySuccess("更新品类名字成功");
         }
@@ -61,7 +61,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     public ServerResponse<List<Category>> getChildrenParallelCategory(Integer categoryId){
-        List<Category> categoryList = categoryMapper.selectCategoryChildrenByParentId(categoryId);
+        List<Category> categoryList = categoryMapper.selectCategoryChildrensByParentId(categoryId);
         if(CollectionUtils.isEmpty(categoryList)){
             logger.info("未找到当前分类的子分类");
         }
@@ -93,12 +93,12 @@ public class CategoryServiceImpl implements ICategoryService {
 
     //递归算法,算出子节点
     private Set<Category> findChildCategory(Set<Category> categorySet ,Integer categoryId){
-        Category category = categoryMapper.selectByPrimaryKey(categoryId);
+        Category category = categoryMapper.selectCategoryByPrimaryKey(categoryId);
         if(category != null){
             categorySet.add(category);
         }
         //查找子节点,递归算法一定要有一个退出的条件
-        List<Category> categoryList = categoryMapper.selectCategoryChildrenByParentId(categoryId);
+        List<Category> categoryList = categoryMapper.selectCategoryChildrensByParentId(categoryId);
         for(Category categoryItem : categoryList){
             findChildCategory(categorySet,categoryItem.getId());
         }

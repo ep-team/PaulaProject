@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eshop.dao.UserMapper">
-  <resultMap id="BaseResultMap" type="com.eshop.pojo.User">
+  <resultMap id="userBaseResultMap" type="com.eshop.pojo.User">
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="username" javaType="java.lang.String" jdbcType="VARCHAR" />
@@ -15,20 +15,20 @@
       <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
     </constructor>
   </resultMap>
-  <sql id="Base_Column_List">
+  <sql id="userBase_Column_List">
     id, username, password, email, phone, question, answer, role, create_time, update_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectUserByPrimaryKey" parameterType="java.lang.Integer" resultMap="userBaseResultMap">
     select 
-    <include refid="Base_Column_List" />
+    <include refid="userBase_Column_List" />
     from eshop_user
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteUserByPrimaryKey" parameterType="java.lang.Integer">
     delete from eshop_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.eshop.pojo.User">
+  <insert id="insertUser" parameterType="com.eshop.pojo.User">
     insert into eshop_user (id, username, password, 
       email, phone, question, 
       answer, role, create_time, 
@@ -38,7 +38,7 @@
       #{answer,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, now(), 
       now())
   </insert>
-  <insert id="insertSelective" parameterType="com.eshop.pojo.User">
+  <insert id="insertUserSelective" parameterType="com.eshop.pojo.User">
     insert into eshop_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -105,7 +105,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.eshop.pojo.User">
+  <update id="updateUserByPrimaryKeySelective" parameterType="com.eshop.pojo.User">
     update eshop_user
     <set>
       <if test="username != null">
@@ -138,7 +138,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.eshop.pojo.User">
+  <update id="updateUserByPrimaryKey" parameterType="com.eshop.pojo.User">
     update eshop_user
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
@@ -152,42 +152,42 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
-  <select id="checkUserName" resultType="int" parameterType="String">
+  <select id="checkUsesUserName" resultType="int" parameterType="String">
   	select count(1) from eshop_user where username = #{username}
   </select>
   
-  <select id="checkUserByEamil" resultType="int" parameterType="String">
+  <select id="checkUsersInfoByEamil" resultType="int" parameterType="String">
   	select count(1) from eshop_user where email = #{email}
   </select>
   
-  <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
+  <select id="selectUserLoginInfo" resultMap="userBaseResultMap" parameterType="map">
   	<!-- 要什么查什么,不要select *, 多部门开发时,可能会给数据库加字段,而你的代码中可能没有可支持的字段时容易保存 -->
   	select
-  	<include refid="Base_Column_List" />
+  	<include refid="userBase_Column_List" />
     from eshop_user
     where username = #{username} and password = #{password}
   </select>
   
-  <select id="selectQuestionByUsername" resultType="String" parameterType="String">
+  <select id="selectFaftyQuestionByUsername" resultType="String" parameterType="String">
   	select question from eshop_user where username = #{username} 
   </select>
   
-  <select id="checkEmailByUserId" resultType="int" parameterType="map">
+  <select id="checkUsersEmailInfoByUserId" resultType="int" parameterType="map">
   	select count(1) from eshop_user where email = #{email} and id != #{userId}
   </select>
   
-  <select id="checkAnswer" resultType="int" parameterType="map">
+  <select id="checkSaftyAnswer" resultType="int" parameterType="map">
   	select count(1) from eshop_user 
   	where username = #{username} and question = #{question} and answer = #{answer}
   </select>
   
-  <update id="updatePasswordByUsername"  parameterType="map">
+  <update id="updateUsersPasswordByUsername"  parameterType="map">
   	update eshop_user 
   	set password=#{passwordNew}, update_time=now()
   	where username = #{username}
   </update>
   
-  <select id="checkPassword" resultType="int" parameterType="map">
+  <select id="checkUsersPassword" resultType="int" parameterType="map">
   	select count(1) from eshop_user where id=#{userId} and password = #{password}
   </select>
 </mapper>

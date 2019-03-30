@@ -27,13 +27,13 @@ public class UserServiceImpl implements IUserService {
 	
 	@Override
 	public ServerResponse<User> login(String username, String password) {
-		int resultCount = userMapper.checkUserName(username);
+		int resultCount = userMapper.checkUsesUserName(username);
 		if (resultCount == 0) {
 			return ServerResponse.createByErrorMessage("用户名不存在");
 		}
 		// 密码登录MD5
 		String md5Password = MD5Util.MD5EncodeUtf8(password);
-		User user = userMapper.selectLogin(username, md5Password);
+		User user = userMapper.selectUserLoginInfo(username, md5Password);
 		if (user == null) {
 			return ServerResponse.createByErrorMessage("密码错误");
 		}
@@ -61,7 +61,7 @@ public class UserServiceImpl implements IUserService {
 		
 		logger.debug("userEmail: " + user.getEmail());
 		System.out.println("userEmail: " + user.getEmail());
-		int resultCount = userMapper.insert(user);
+		int resultCount = userMapper.insertUser(user);
 		if (resultCount == 0) {
 			return ServerResponse.createByErrorMessage("注册失败");
 		}
@@ -74,14 +74,14 @@ public class UserServiceImpl implements IUserService {
 			// 开始校验
 			if (Const.USERNAME.equals(type)) {
 				// 校验用户名是否存在
-				resultCount = userMapper.checkUserName(str);
+				resultCount = userMapper.checkUsesUserName(str);
 				if (resultCount > 0) {
 					return ServerResponse.createByErrorMessage("用户名已存在");
 				}
 			}
 			if (Const.EMAIL.equals(type)) {
 				// 校验email是否存在
-				resultCount = userMapper.checkUserByEamil(str);
+				resultCount = userMapper.checkUsersInfoByEamil(str);
 				if (resultCount > 0) {
 					return ServerResponse.createByErrorMessage("email已存在");
 				}
@@ -99,7 +99,7 @@ public class UserServiceImpl implements IUserService {
 			// 用户不存在
 			return ServerResponse.createByErrorMessage("用户不存在");
 		}
-		String question = userMapper.selectQuestionByUsername(username);
+		String question = userMapper.selectFaftyQuestionByUsername(username);
 		if (org.apache.commons.lang3.StringUtils.isNotBlank(question)) {
 			return ServerResponse.createBySuccess(question);
 		}
@@ -108,7 +108,7 @@ public class UserServiceImpl implements IUserService {
 
 	public ServerResponse<String> checkAnswer(String username, String question, String answer) {
 		// 使用本地的Guava缓存来做token
-		int resultCount = userMapper.checkAnswer(username, question, answer);
+		int resultCount = userMapper.checkSaftyAnswer(username, question, answer);
 		if (resultCount > 0) {
 			// 说明问题及问题答案是这个用户的,并且是正确的
 			String forgetToken = UUID.randomUUID().toString();
@@ -145,7 +145,7 @@ public class UserServiceImpl implements IUserService {
 		
 		if(org.apache.commons.lang3.StringUtils.equals(forgetToken, token)) {
 			String md5Password = MD5Util.MD5EncodeUtf8(passwordNew);
-			int rowCount = userMapper.updatePasswordByUsername(username, md5Password);
+			int rowCount = userMapper.updateUsersPasswordByUsername(username, md5Password);
 			if (rowCount>0) {
 				return ServerResponse.createBySuccessMessage("修改密码成功");
 			}
@@ -157,12 +157,12 @@ public class UserServiceImpl implements IUserService {
 
 	public ServerResponse<String> resetPassword(String passwordOld, String passwordNew, User user) {
 		//为防止横向越线,要校验一下这个用户的旧密码, 一定要指定是这个用户,因为我们会查询一个count(1),如果不指定id,那么结果就是ture或count>0
-		int resultCount = userMapper.checkPassword(MD5Util.MD5EncodeUtf8(passwordOld), user.getId());
+		int resultCount = userMapper.checkUsersPassword(MD5Util.MD5EncodeUtf8(passwordOld), user.getId());
 		if(resultCount ==0) {
 			return ServerResponse.createByErrorMessage("旧密码错误");
 		}
 		user.setPassword(MD5Util.MD5EncodeUtf8(passwordNew));
-		int updateCount = userMapper.updateByPrimaryKeySelective(user);
+		int updateCount = userMapper.updateUserByPrimaryKeySelective(user);
 		if(updateCount>0) {
 			return ServerResponse.createBySuccessMessage("密码更新成功");
 		}
@@ -172,7 +172,7 @@ public class UserServiceImpl implements IUserService {
 	public ServerResponse<User> updateInfomation(User user) {
 		//username不能被更新
 		//email也要进行一个校验,校验新的email是不是已经存在,并且存在的email如果相同的话,不能是我们当前的这个用户的.
-		int resultCount = userMapper.checkEmailByUserId(user.getEmail(), user.getId());
+		int resultCount = userMapper.checkUsersEmailInfoByUserId(user.getEmail(), user.getId());
 		if(resultCount > 0) {
 			return ServerResponse.createByErrorMessage("email已存在,请更换email在尝试更新");
 		}
@@ -184,7 +184,7 @@ public class UserServiceImpl implements IUserService {
 		updateUser.setAnswer(user.getAnswer());
 		
 		//只更新Id,email,phone,question,answer, updateTime
-		int updateCount = userMapper.updateByPrimaryKeySelective(updateUser);
+		int updateCount = userMapper.updateUserByPrimaryKeySelective(updateUser);
 		if(updateCount > 0) {
 			return ServerResponse.createBySuccess("更新个人信息成功", updateUser);
 		}
@@ -192,7 +192,7 @@ public class UserServiceImpl implements IUserService {
 	}
 	
 	public ServerResponse<User> getInfomation(Integer userId) {
-		User user = userMapper.selectByPrimaryKey(userId);
+		User user = userMapper.selectUserByPrimaryKey(userId);
 		if(user == null) {
 			return ServerResponse.createByErrorMessage("找不到当前用户");
 		}

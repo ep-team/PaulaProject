@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eshop.dao.OrderItemMapper">
-  <resultMap id="BaseResultMap" type="com.eshop.pojo.OrderItem">
+  <resultMap id="orderItemBaseResultMap" type="com.eshop.pojo.OrderItem">
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
@@ -16,21 +16,21 @@
       <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
     </constructor>
   </resultMap>
-  <sql id="Base_Column_List">
+  <sql id="orderItem_Base_Column_List">
     id, user_id, order_no, product_id, product_name, product_image, current_unit_price, 
     quantity, total_price, create_time, update_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectOrderItemByPrimaryKey" parameterType="java.lang.Integer" resultMap="orderItemBaseResultMap">
     select 
-    <include refid="Base_Column_List" />
+    <include refid="orderItem_Base_Column_List" />
     from eshop_order_item
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteOrderItemByPrimaryKey" parameterType="java.lang.Integer">
     delete from eshop_order_item
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.eshop.pojo.OrderItem">
+  <insert id="insertOrderItem" parameterType="com.eshop.pojo.OrderItem">
     insert into eshop_order_item (id, user_id, order_no, 
       product_id, product_name, product_image, 
       current_unit_price, quantity, total_price, 
@@ -40,7 +40,7 @@
       #{currentUnitPrice,jdbcType=DECIMAL}, #{quantity,jdbcType=INTEGER}, #{totalPrice,jdbcType=DECIMAL}, 
       now(), now())
   </insert>
-  <insert id="insertSelective" parameterType="com.eshop.pojo.OrderItem">
+  <insert id="insertOrderItemSelective" parameterType="com.eshop.pojo.OrderItem">
     insert into eshop_order_item
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -113,7 +113,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.eshop.pojo.OrderItem">
+  <update id="updateOrderItemByPrimaryKeySelective" parameterType="com.eshop.pojo.OrderItem">
     update eshop_order_item
     <set>
       <if test="userId != null">
@@ -149,7 +149,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.eshop.pojo.OrderItem">
+  <update id="updateOrderItemByPrimaryKey" parameterType="com.eshop.pojo.OrderItem">
     update eshop_order_item
     set user_id = #{userId,jdbcType=INTEGER},
       order_no = #{orderNo,jdbcType=BIGINT},
@@ -164,24 +164,24 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
- <select id="getByOrderNoUserId" parameterType="map" resultMap="BaseResultMap">
+ <select id="getOrderItemByOrderNoUserId" parameterType="map" resultMap="orderItemBaseResultMap">
     SELECT
-    <include refid="Base_Column_List"/>
+    <include refid="orderItem_Base_Column_List"/>
     from eshop_order_item
     where order_no = #{orderNo}
     and user_id = #{userId}
   </select>
 
-  <select id="getByOrderNo" parameterType="map" resultMap="BaseResultMap">
+  <select id="getOrderItemByOrderNo" parameterType="map" resultMap="orderItemBaseResultMap">
     SELECT
-    <include refid="Base_Column_List"/>
+    <include refid="orderItem_Base_Column_List"/>
     from eshop_order_item
     where order_no = #{orderNo}
   </select>
 
 
 
-  <insert id="batchInsert" parameterType="list">
+  <insert id="batchInsertOrderItems" parameterType="list">
     insert into eshop_order_item (id, order_no,user_id, product_id,
       product_name, product_image, current_unit_price,
       quantity, total_price, create_time,

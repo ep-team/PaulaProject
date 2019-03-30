@@ -7,22 +7,22 @@ import org.apache.ibatis.annotations.Param;
 import com.eshop.pojo.Product;
 
 public interface ProductMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteProductMapperByPrimaryKey(Integer id);
 
-    int insert(Product record);
+    int insertProductMapper(Product record);
 
-    int insertSelective(Product record);
+    int insertProductMapperSelective(Product record);
 
-    Product selectByPrimaryKey(Integer id);
+    Product selectProductMapperByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(Product record);
+    int updateProductMapperByPrimaryKeySelective(Product record);
 
-    int updateByPrimaryKey(Product record);
+    int updateProdctMapperByPrimaryKey(Product record);
     
-    List<Product> selectList();
+    List<Product> selectProductMapperList();
 
-    List<Product> selectByNameAndProductId(@Param("productName")String productName,@Param("productId") Integer productId);
+    List<Product> selectProductByNameAndProductId(@Param("productName")String productName,@Param("productId") Integer productId);
 
-    List<Product> selectByNameAndCategoryIds(@Param("productName")String productName,@Param("categoryIdList")List<Integer> categoryIdList);
+    List<Product> selectProductByNameAndCategoryIds(@Param("productName")String productName,@Param("categoryIdList")List<Integer> categoryIdList);
 
 }

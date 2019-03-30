@@ -3,15 +3,15 @@ package com.eshop.dao;
 import com.eshop.pojo.PayInfo;
 
 public interface PayInfoMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deletePayInfoByPrimaryKey(Integer id);
 
-    int insert(PayInfo record);
+    int insertPayInfo(PayInfo record);
 
-    int insertSelective(PayInfo record);
+    int insertPayInfoSelective(PayInfo record);
 
-    PayInfo selectByPrimaryKey(Integer id);
+    PayInfo selectPayInfoByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(PayInfo record);
+    int updatePayInfoByPrimaryKeySelective(PayInfo record);
 
-    int updateByPrimaryKey(PayInfo record);
+    int updatePayInfoByPrimaryKey(PayInfo record);
 }

@@ -7,23 +7,23 @@ import org.apache.ibatis.annotations.Param;
 import com.eshop.pojo.Order;
 
 public interface OrderMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteOrderMapperByPrimaryKey(Integer id);
 
-    int insert(Order record);
+    int insertOrderMapper(Order record);
 
-    int insertSelective(Order record);
+    int insertOrderMapperSelective(Order record);
 
-    Order selectByPrimaryKey(Integer id);
+    Order selectOrderMapperByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(Order record);
+    int updateOrderMapperByPrimaryKeySelective(Order record);
 
-    int updateByPrimaryKey(Order record);
+    int updateOrderMapperByPrimaryKey(Order record);
     
-    Order selectByUserIdAndOrderNo(@Param("userId")Integer userId,@Param("orderNo")Long orderNo);
+    Order selectOrderMapperByUserIdAndOrderNo(@Param("userId")Integer userId,@Param("orderNo")Long orderNo);
 
-    Order selectByOrderNo(Long orderNo);
+    Order selectoOrderMapperByOrderNo(Long orderNo);
 
-    List<Order> selectByUserId(Integer userId);
+    List<Order> selectOrderMapperByUserId(Integer userId);
 
-    List<Order> selectAllOrder();
+    List<Order> selectAllOrderMapper();
 }

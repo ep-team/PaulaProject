@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eshop.dao.CartMapper">
-  <resultMap id="BaseResultMap" type="com.eshop.pojo.Cart">
+  <resultMap id="cartBaseResultMap" type="com.eshop.pojo.Cart">
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
@@ -12,20 +12,20 @@
       <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
     </constructor>
   </resultMap>
-  <sql id="Base_Column_List">
+  <sql id="Cart_Base_Column_List">
     id, user_id, product_id, quantity, checked, create_time, update_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectCartByPrimaryKey" parameterType="java.lang.Integer" resultMap="cartBaseResultMap">
     select 
-    <include refid="Base_Column_List" />
+    <include refid="Cart_Base_Column_List" />
     from eshop_cart
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteCartByPrimaryKey" parameterType="java.lang.Integer">
     delete from eshop_cart
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.eshop.pojo.Cart">
+  <insert id="insertCart" parameterType="com.eshop.pojo.Cart">
     insert into eshop_cart (id, user_id, product_id, 
       quantity, checked, create_time, 
       update_time)
@@ -33,7 +33,7 @@
       #{quantity,jdbcType=INTEGER}, #{checked,jdbcType=INTEGER}, now(), 
       now())
   </insert>
-  <insert id="insertSelective" parameterType="com.eshop.pojo.Cart">
+  <insert id="insertCartSelective" parameterType="com.eshop.pojo.Cart">
     insert into eshop_cart
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -82,7 +82,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.eshop.pojo.Cart">
+  <update id="updateCartByPrimaryKeySelective" parameterType="com.eshop.pojo.Cart">
     update eshop_cart
     <set>
       <if test="userId != null">
@@ -106,7 +106,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.eshop.pojo.Cart">
+  <update id="updateCartByPrimaryKey" parameterType="com.eshop.pojo.Cart">
     update eshop_cart
     set user_id = #{userId,jdbcType=INTEGER},
       product_id = #{productId,jdbcType=INTEGER},
@@ -117,9 +117,9 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
-  <select id="selectCartByUserIdProductId" resultMap="BaseResultMap" parameterType="map">
+  <select id="selectCartByUserIdAndProductId" resultMap="cartBaseResultMap" parameterType="java.util.Map">
     SELECT
-    <include refid="Base_Column_List"/>
+    <include refid="Cart_Base_Column_List"/>
     from eshop_cart
     where user_id = #{userId}
     and product_id = #{productId}
@@ -127,19 +127,19 @@
 
 
 
-  <select id="selectCartByUserId" resultMap="BaseResultMap" parameterType="int">
+  <select id="selectOneCartByUserId" resultMap="cartBaseResultMap" parameterType="java.lang.Integer">
     SELECT
-    <include refid="Base_Column_List"/>
+    <include refid="Cart_Base_Column_List"/>
     from eshop_cart
     where user_id = #{userId}
   </select>
 
-  <select id="selectCartProductCheckedStatusByUserId" resultType="int" parameterType="int">
+  <select id="selectDetailsCartProductCheckedStatusByUserId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
     SELECT  count(1) from eshop_cart where checked = 0 and user_id = #{userId}
   </select>
   
   
-  <delete id="deleteByUserIdProductIds" parameterType="map">
+  <delete id="deleteByUserIdAndProductIds" parameterType="java.util.Map">
     delete from eshop_cart
     where user_id = #{userId}
     <if test="productIdList != null">
@@ -152,7 +152,7 @@
 
 
 
-  <update id="checkedOrUncheckedProduct" parameterType="map">
+  <update id="checkedCartOrUncheckedCartProduct" parameterType="java.util.Map">
     UPDATE  eshop_cart
     set checked = #{checked},
     update_time = now()
@@ -163,15 +163,15 @@
   </update>
 
 
-  <select id="selectCartProductCount" parameterType="int" resultType="int">
+  <select id="selectCartTotalProductCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
     select IFNULL(sum(quantity),0) as count from eshop_cart where user_id = #{userId}
   </select>
 
 
 
-  <select id="selectCheckedCartByUserId" parameterType="int" resultMap="BaseResultMap">
+  <select id="selectAllCheckedCartByUserId" parameterType="java.lang.Integer" resultMap="cartBaseResultMap">
     SELECT
-    <include refid="Base_Column_List"/>
+    <include refid="Cart_Base_Column_List"/>
     from eshop_cart
     where user_id = #{userId}
     and checked = 1

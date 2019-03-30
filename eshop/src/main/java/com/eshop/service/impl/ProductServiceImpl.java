@@ -56,13 +56,13 @@ public class ProductServiceImpl implements IProductService {
             }
 
             if(product.getId() != null){
-                int rowCount = productMapper.updateByPrimaryKey(product);
+                int rowCount = productMapper.updateProdctMapperByPrimaryKey(product);
                 if(rowCount > 0){
                     return ServerResponse.createBySuccess("更新产品成功");
                 }
                 return ServerResponse.createBySuccess("更新产品失败");
             }else{
-                int rowCount = productMapper.insert(product);
+                int rowCount = productMapper.insertProductMapper(product);
                 if(rowCount > 0){
                     return ServerResponse.createBySuccess("新增产品成功");
                 }
@@ -80,7 +80,7 @@ public class ProductServiceImpl implements IProductService {
         Product product = new Product();
         product.setId(productId);
         product.setStatus(status);
-        int rowCount = productMapper.updateByPrimaryKeySelective(product);
+        int rowCount = productMapper.updateProductMapperByPrimaryKeySelective(product);
         if(rowCount > 0){
             return ServerResponse.createBySuccess("修改产品销售状态成功");
         }
@@ -92,7 +92,7 @@ public class ProductServiceImpl implements IProductService {
         if(productId == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
-        Product product = productMapper.selectByPrimaryKey(productId);
+        Product product = productMapper.selectProductMapperByPrimaryKey(productId);
         if(product == null){
             return ServerResponse.createByErrorMessage("产品已下架或者删除");
         }
@@ -116,7 +116,7 @@ public class ProductServiceImpl implements IProductService {
         //将配置与代码隔离,如果ftp服务器连接修改,只需要修改配置文件,不需要修改代码,以后会优化为热部署配置 
         productDetailVo.setImageHost(PropertiesUtil.getStringProperty("ftp.server.http.prefix","http://img.eshop.com/"));
 
-        Category category = categoryMapper.selectByPrimaryKey(product.getCategoryId());
+        Category category = categoryMapper.selectCategoryByPrimaryKey(product.getCategoryId());
         if(category == null){
             productDetailVo.setParentCategoryId(0);//默认根节点
         }else{
@@ -135,7 +135,7 @@ public class ProductServiceImpl implements IProductService {
         //填充自己的sql查询逻辑
         //pageHelper-收尾
         PageHelper.startPage(pageNum,pageSize);
-        List<Product> productList = productMapper.selectList();
+        List<Product> productList = productMapper.selectProductMapperList();
 
         List<ProductListVo> productListVoList = Lists.newArrayList();
         for(Product productItem : productList){
@@ -169,7 +169,7 @@ public class ProductServiceImpl implements IProductService {
         if(StringUtils.isNotBlank(productName)){
             productName = new StringBuilder().append("%").append(productName).append("%").toString();
         }
-        List<Product> productList = productMapper.selectByNameAndProductId(productName,productId);
+        List<Product> productList = productMapper.selectProductByNameAndProductId(productName,productId);
         List<ProductListVo> productListVoList = Lists.newArrayList();
         for(Product productItem : productList){
             ProductListVo productListVo = assembleProductListVo(productItem);
@@ -185,7 +185,7 @@ public class ProductServiceImpl implements IProductService {
         if(productId == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
-        Product product = productMapper.selectByPrimaryKey(productId);
+        Product product = productMapper.selectProductMapperByPrimaryKey(productId);
         if(product == null){
             return ServerResponse.createByErrorMessage("产品已下架或者删除");
         }
@@ -208,7 +208,7 @@ public class ProductServiceImpl implements IProductService {
 
         //keyword和categoryId两个参数, categoryId为优先筛选
         if(categoryId != null){
-            Category category = categoryMapper.selectByPrimaryKey(categoryId);
+            Category category = categoryMapper.selectCategoryByPrimaryKey(categoryId);
             if(category == null && StringUtils.isBlank(keyword)){
                 //没有该分类,并且还没有关键字,这个时候返回一个空的结果集,不报错
                 PageHelper.startPage(pageNum,pageSize);
@@ -237,7 +237,7 @@ public class ProductServiceImpl implements IProductService {
         
         //keyword其实就是productName
         //sql中用<foreach>来遍历categoryIdList
-        List<Product> productList = productMapper.selectByNameAndCategoryIds(StringUtils.isBlank(keyword)?null:keyword,categoryIdList.size()==0?null:categoryIdList);
+        List<Product> productList = productMapper.selectProductByNameAndCategoryIds(StringUtils.isBlank(keyword)?null:keyword,categoryIdList.size()==0?null:categoryIdList);
 
         List<ProductListVo> productListVoList = Lists.newArrayList();
         for(Product product : productList){

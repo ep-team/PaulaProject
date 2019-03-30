@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eshop.dao.ProductMapper">
-  <resultMap id="BaseResultMap" type="com.eshop.pojo.Product">
+  <resultMap id="productMapperBaseResultMap" type="com.eshop.pojo.Product">
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="category_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
@@ -17,21 +17,21 @@
       <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
     </constructor>
   </resultMap>
-  <sql id="Base_Column_List">
+  <sql id="productMapper_Base_Column_List">
     id, category_id, name, subtitle, main_image, sub_images, detail, price, stock, status, 
     create_time, update_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectProductMapperByPrimaryKey" parameterType="java.lang.Integer" resultMap="productMapperBaseResultMap">
     select 
-    <include refid="Base_Column_List" />
+    <include refid="productMapper_Base_Column_List" />
     from eshop_product
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteProductMapperByPrimaryKey" parameterType="java.lang.Integer">
     delete from eshop_product
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.eshop.pojo.Product">
+  <insert id="insertProductMapper" parameterType="com.eshop.pojo.Product">
     insert into eshop_product (id, category_id, name, 
       subtitle, main_image, sub_images, 
       detail, price, stock, 
@@ -43,7 +43,7 @@
       #{status,jdbcType=INTEGER}, now(), now()
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.eshop.pojo.Product">
+  <insert id="insertProductMapperSelective" parameterType="com.eshop.pojo.Product">
     insert into eshop_product
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -122,7 +122,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.eshop.pojo.Product">
+  <update id="updateProductMapperByPrimaryKeySelective" parameterType="com.eshop.pojo.Product">
     update eshop_product
     <set>
       <if test="categoryId != null">
@@ -161,7 +161,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.eshop.pojo.Product">
+  <update id="updateProdctMapperByPrimaryKey" parameterType="com.eshop.pojo.Product">
     update eshop_product
     set category_id = #{categoryId,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},
@@ -177,17 +177,17 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
-  <select id="selectList" resultMap="BaseResultMap" >
+  <select id="selectProductMapperList" resultMap="productMapperBaseResultMap" >
     SELECT
-    <include refid="Base_Column_List"/>
+    <include refid="productMapper_Base_Column_List"/>
     from eshop_product
     ORDER BY id asc
   </select>
 
 
-  <select id="selectByNameAndProductId" resultMap="BaseResultMap" parameterType="map">
+  <select id="selectProductByNameAndProductId" resultMap="productMapperBaseResultMap" parameterType="map">
     SELECT
-    <include refid="Base_Column_List"/>
+    <include refid="productMapper_Base_Column_List"/>
     from eshop_product
     <where>
       <if test="productName != null">
@@ -199,9 +199,9 @@
     </where>
   </select>
   
-  <select id="selectByNameAndCategoryIds" resultMap="BaseResultMap" parameterType="map">
+  <select id="selectProductByNameAndCategoryIds" resultMap="productMapperBaseResultMap" parameterType="map">
     SELECT
-    <include refid="Base_Column_List"></include>
+    <include refid="productMapper_Base_Column_List"></include>
     from eshop_product
     where status = 1
     <if test="productName != null">

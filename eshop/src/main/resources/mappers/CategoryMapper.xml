@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.eshop.dao.CategoryMapper">
-  <resultMap id="BaseResultMap" type="com.eshop.pojo.Category">
+  <resultMap id="categoryBaseResultMap" type="com.eshop.pojo.Category">
     <constructor>
       <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
       <arg column="parent_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
@@ -12,20 +12,20 @@
       <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
     </constructor>
   </resultMap>
-  <sql id="Base_Column_List">
+  <sql id="category_Base_Column_List">
     id, parent_id, name, status, sort_order, create_time, update_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectCategoryByPrimaryKey" parameterType="java.lang.Integer" resultMap="categoryBaseResultMap">
     select 
-    <include refid="Base_Column_List" />
+    <include refid="category_Base_Column_List" />
     from eshop_category
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteCategoryByPrimaryKey" parameterType="java.lang.Integer">
     delete from eshop_category
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.eshop.pojo.Category">
+  <insert id="insertCategory" parameterType="com.eshop.pojo.Category">
     insert into eshop_category (id, parent_id, name, 
       status, sort_order, create_time, 
       update_time)
@@ -33,7 +33,7 @@
       #{status,jdbcType=BIT}, #{sortOrder,jdbcType=INTEGER}, now(), 
       now())
   </insert>
-  <insert id="insertSelective" parameterType="com.eshop.pojo.Category">
+  <insert id="insertCategorySelective" parameterType="com.eshop.pojo.Category">
     insert into eshop_category
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -82,7 +82,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.eshop.pojo.Category">
+  <update id="updateCategoryByPrimaryKeySelective" parameterType="com.eshop.pojo.Category">
     update eshop_category
     <set>
       <if test="parentId != null">
@@ -106,7 +106,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.eshop.pojo.Category">
+  <update id="updateCategoryByPrimaryKey" parameterType="com.eshop.pojo.Category">
     update eshop_category
     set parent_id = #{parentId,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},
@@ -117,9 +117,9 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   
-  <select id="selectCategoryChildrenByParentId" resultMap="BaseResultMap" parameterType="int">
+  <select id="selectCategoryChildrensByParentId" resultMap="categoryBaseResultMap" parameterType="int">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="category_Base_Column_List"/>
     from eshop_category
     where parent_id = #{parentId}
   </select>

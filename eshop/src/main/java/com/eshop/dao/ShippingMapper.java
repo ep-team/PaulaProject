@@ -7,23 +7,23 @@ import org.apache.ibatis.annotations.Param;
 import com.eshop.pojo.Shipping;
 
 public interface ShippingMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteShippingByPrimaryKey(Integer id);
 
-    int insert(Shipping record);
+    int insertShipping(Shipping record);
 
-    int insertSelective(Shipping record);
+    int insertShippingSelective(Shipping record);
 
-    Shipping selectByPrimaryKey(Integer id);
+    Shipping selectShippingByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(Shipping record);
+    int updateShippingByPrimaryKeySelective(Shipping record);
 
-    int updateByPrimaryKey(Shipping record);
+    int updateShippingByPrimaryKey(Shipping record);
     
-    int deleteByShippingIdUserId(@Param("userId")Integer userId,@Param("shippingId") Integer shippingId);
+    int deleteShipingByShippingIdUserId(@Param("userId")Integer userId,@Param("shippingId") Integer shippingId);
 
-    int updateByShipping(Shipping record);
+    int updateShippingByShipping(Shipping record);
 
-    Shipping selectByShippingIdUserId(@Param("userId")Integer userId,@Param("shippingId") Integer shippingId);
+    Shipping selectShippingByShippingIdUserId(@Param("userId")Integer userId,@Param("shippingId") Integer shippingId);
 
-    List<Shipping> selectByUserId(@Param("userId")Integer userId);
+    List<Shipping> selectShippingByUserId(@Param("userId")Integer userId);
 }
