@@ -16,20 +16,16 @@ import java.util.Date;
  */
 public class DaoTest extends TestBase {
 
-    @Autowired
     private UserMapper userMapper;
 
-    @Ignore
-    @Test
     public void testDao(){
         User a = new User();
         a.setPassword("111");
         a.setUsername("aaaaaPaula");
         a.setRole(0);
-        a.setCreateTime(new Date());
+        a.setCreateTime(new Date());	
         a.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-        System.out.println(userMapper.insert(a));
-        System.out.println("aaaaaaaaaaaaaa");
+        System.out.println(userMapper.insertUser(a));
     }
 
 
