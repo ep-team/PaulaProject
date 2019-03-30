@@ -24,6 +24,7 @@ public class Const {
 	
 	public interface  ErrorMessage{
 		String USER_NOT_LOGIN = "User is not logged in!";
+		String USER_IS_NOT_ADMIN = "User is not admin, could not login backgound system!";
     }
 	
 	//Product搜索中, 排序规则定义, price是orderBy的字段, desc和asc是降序和升序

@@ -19,7 +19,13 @@ import com.eshop.utilities.CookieUtil;
 import com.eshop.utilities.JsonUtil;
 import com.eshop.utilities.RedisShardedPoolUtil;
 
-//后台用户管理
+/**
+ * Description: 
+ * This is the controller to handle the request for admin' access permission and user information management
+ *    
+ * @author Paula Lin
+ *
+ */
 @Controller
 @RequestMapping("/manage/user")
 public class UserManageController {
@@ -28,27 +34,37 @@ public class UserManageController {
 	@Autowired
 	private IUserService iUserService;
 	
+	/**
+	 * Description: 
+	 * This method handler is provided for admin user access and related validation.
+	 * 
+	 * @param username
+	 * @param password
+	 * @param session
+	 * @param httpServletResponse
+	 * @return
+	 */
 	@RequestMapping(value="login.do", method=RequestMethod.POST)
 	@ResponseBody
-	//admin005/admin005
-	//二期 start
-	//public ServerResponse<User> login(String username, String password, HttpSession session) {
 	public ServerResponse<User> login(String username, String password, HttpSession session, HttpServletResponse httpServletResponse) {
-	//二期 end
+	
+		//User common login validation
 		ServerResponse response = iUserService.login(username, password);
+		
 		if(response.isSuccess()) {
+			//If pass the common login validation
+			//get user data
 			User user = (User) response.getData();
+			
+			//Check the role of user, only user with ADMIN role can login background system
 			if(user.getRole() == Const.Role.ROLE_ADMIN) {
-				//二期 start
-				//说明登录的是管理员
-				//session.setAttribute(Const.CURRENT_USER, user);
-				
-				//新增redis共享cookie，session的方式
+				//If user is with ADMIN role, then can successfully login and cache user's info <sessionId, UserInfo> as loginToken to redis for 30 min
                 CookieUtil.writeLoginToken(httpServletResponse,session.getId());
                 RedisShardedPoolUtil.setEx(session.getId(), Const.RedisCacheExtime.REDIS_SESSION_EXTIME, JsonUtil.obj2String(response.getData()));
-                //二期 end
+                return response;
 			}else {
-				return ServerResponse.createByErrorMessage("不是管理员,无法登录");
+				//return error message: "User is not admin, could not login backgound system!"
+				return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_IS_NOT_ADMIN);
 			}
 		}
 		return response;
