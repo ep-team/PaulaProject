@@ -300,7 +300,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>eshop</finalName>
+		<finalName>shoppingMall</finalName>
 		<plugins>
 			<!-- 根据数据库的数据结构,表结构生成对应的dao层文件 -->
 			<plugin>

@@ -16,7 +16,7 @@ public class CookieUtil {
 	private static Logger logger = LoggerFactory.getLogger(CookieUtil.class);
 	
 	//".eshop.com"是一级域名,二级域名及以上可以读到该cookie..... "xxx.eshop.com"是二级域名
-	private final static String COOKIE_DOMAIN = "eshop.com";
+	private final static String COOKIE_DOMAIN = "suppermmall.com";
 	//COOKIE_NAME是服务端要种到客户端浏览器上的
 	private final static String COOKIE_NAME = "eshop_login_token";
 	
@@ -25,11 +25,10 @@ public class CookieUtil {
 		Cookie[] cookies = request.getCookies();
 		if(cookies != null) {
 			for(Cookie cookie: cookies) {
-				logger.info("read cookieName:{}, cookieValue:{}", cookie.getName(), cookie.getValue());
-				System.out.println("read cookieName:" + cookie.getName() + " cookieValue:" + cookie.getValue() + " cookieDomain:" + cookie.getDomain());
+				logger.info("Looping cookies from request,  cookieName:" + cookie.getName() + " cookieValue:" + cookie.getValue() + " cookieDomain:" + cookie.getDomain());
 				//org.apache.commons.lang.StringUtils类中的equals方法已经对cookie.getName()做空值(null)判断, 避免空指针异常
 				if(StringUtils.equals(cookie.getName(), COOKIE_NAME)) {
-					logger.info("return cookieName:{}, cookieValue:{}", cookie.getName(), cookie.getValue());
+					logger.info("return cookie: cookieName:{}, cookieValue:{}", cookie.getName(), cookie.getValue());
 					return cookie.getValue();
 				}
 			}
@@ -53,8 +52,7 @@ public class CookieUtil {
 		//maxAge是设置cookie的有效期, 单位是秒,  -1代表永久...如果maxAge不设置, 则cookie不会写到硬盘, 只会写到内存, 只在客户端当前页面有效.
 		//如下, 将cookie设置为1年的有效期, 60*60*24*365
 		cookie.setMaxAge(60*60*24*365);
-		logger.info("write cookieName:{}, cookieValue:{}", cookie.getName(), cookie.getValue());
-		System.out.println("write cookieName:" + cookie.getName() + " cookieValue:" + cookie.getValue() + " cookieDomain:" + cookie.getDomain());
+		logger.info("add token to response with cookieName:{}, cookieValue:{}, cookieDomian:{}", cookie.getName(), cookie.getValue(), cookie.getDomain());
 		
 		//将cookie返回给客户端浏览器
 		response.addCookie(cookie);
