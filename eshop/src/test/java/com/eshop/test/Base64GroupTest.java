@@ -5,12 +5,19 @@ import sun.misc.BASE64Encoder;
 
 import java.io.UnsupportedEncodingException;
 
+import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
+
 /**
  * Created by Paula
  */
-public class Base64GroupTest {
-    // 加密
-    public static String getBase64(String str) {
+@ContextConfiguration(locations = {"classpath:applicationContext.xml"})
+public class Base64GroupTest extends AbstractTransactionalJUnit4SpringContextTests {
+    
+	@Test
+    public void getBase64() {
+		String str = "";
         byte[] b = null;
         String s = null;
         try {
@@ -21,7 +28,6 @@ public class Base64GroupTest {
         if (b != null) {
             s = new BASE64Encoder().encode(b);
         }
-        return s;
     }
 
     // 解密
@@ -40,9 +46,4 @@ public class Base64GroupTest {
         return result;
     }
 
-    public static void main(String[] args) {
-        //todo execute
-        String base64TestStr = "6L+Z6YO96KKr5L2g5Y+R546w5ZOH5ZKU5ZKUfn5oYXBweW1tYWxs55qEUVHnvqTlj7c6NTAwNTUwNzDvvIzmrKLov47liqDlhaV+fg==";
-        System.out.println(getFromBase64(base64TestStr));
-    }
 }

@@ -1,17 +1,17 @@
 package com.eshop.test;
 
 import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 import java.math.BigDecimal;
 
 /**
  * Created by Paula
  */
-
-
-
-
-public class BigDecimalTest {
+@ContextConfiguration(locations = {"classpath:applicationContext.xml"})
+public class BigDecimalTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Test
     public void test1(){
