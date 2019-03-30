@@ -297,6 +297,17 @@
 			<version>2.6.0</version>
 		</dependency>
 
+		<!-- Ali Pay -->
+		<dependency>
+			<groupId>com.alipay.sdk</groupId>
+			<artifactId>alipay_sdk</artifactId>
+			<version>20161213</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alipay.trade</groupId>
+			<artifactId>alipay_trade</artifactId>
+			<version>20161213</version>
+		</dependency>
 	</dependencies>
 
 	<build>
