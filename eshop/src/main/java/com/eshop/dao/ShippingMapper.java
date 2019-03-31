@@ -73,4 +73,9 @@ public interface ShippingMapper {
      * @return
      */
     List<Shipping> selectShippingByUserId(@Param("userId")Integer userId);
+    
+    /**
+     * @return
+     */
+    List<Shipping> findAllShippingListInfo();
 }

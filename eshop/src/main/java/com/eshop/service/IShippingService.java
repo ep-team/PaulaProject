@@ -1,5 +1,7 @@
 package com.eshop.service;
 
+import java.util.List;
+
 import com.eshop.common.ServerResponse;
 import com.eshop.pojo.Shipping;
 import com.github.pagehelper.PageInfo;
@@ -50,5 +52,7 @@ public interface IShippingService {
      * @return
      */
     ServerResponse<PageInfo> listShippingAddress(Integer userId, int pageNum, int pageSize);
+    
+    List<Shipping> findAllShippingListInfo();
 
 }

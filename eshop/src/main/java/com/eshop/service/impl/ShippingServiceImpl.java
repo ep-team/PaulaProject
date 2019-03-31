@@ -103,6 +103,11 @@ public class ShippingServiceImpl implements IShippingService {
         return ServerResponse.createBySuccess(pageInfo);
     }
 
+	@Override
+	public List<Shipping> findAllShippingListInfo() {
+		return shippingMapper.findAllShippingListInfo();
+	}
+
 
 
 

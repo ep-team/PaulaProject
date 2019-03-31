@@ -208,7 +208,12 @@
     where id = #{shippingId}
     and user_id = #{userId}
   </select>
-
+  
+  <select id="findAllShippingListInfo" resultMap="shippingBaseResultMap">
+    SELECT
+    <include refid="shipping_Base_Column_List"/>
+    from eshop_shipping
+  </select>
 
   <select id="selectShippingByUserId" resultMap="shippingBaseResultMap" parameterType="map">
     SELECT
