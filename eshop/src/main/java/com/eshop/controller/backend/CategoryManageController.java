@@ -13,7 +13,11 @@ import com.eshop.service.ICategoryService;
 import com.eshop.service.IUserService;
 
 /**
- * Created by Paula
+ * Description: 
+ * This is the controller to handle the request for admin' access permission and user information management
+ * 
+ * @author Paula Lin
+ *
  */
 @Controller
 @RequestMapping("/manage/category")
@@ -27,6 +31,14 @@ public class CategoryManageController {
     @Autowired
     private ICategoryService iCategoryService;
 
+    /**
+     * Description: 
+	 * This method handler is provided for admin user access and related validation.
+	 * 
+     * @param categoryName
+     * @param parentId
+     * @return
+     */
     @RequestMapping("add_category.do")
     @ResponseBody
     /*
@@ -37,6 +49,12 @@ public class CategoryManageController {
     	return iCategoryService.addCategory(categoryName,parentId);
     }
 
+    /**
+     * 
+     * @param categoryId
+     * @param categoryName
+     * @return
+     */
     @RequestMapping("set_category_name.do")
     @ResponseBody
     public ServerResponse setCategoryName(Integer categoryId,String categoryName){
@@ -44,6 +62,11 @@ public class CategoryManageController {
     	return iCategoryService.updateCategoryName(categoryId,categoryName);
     }
     
+    /**
+     * 
+     * @param categoryId
+     * @return
+     */
     @RequestMapping("get_category.do")
     @ResponseBody
     public ServerResponse getChildrenParallelCategory(@RequestParam(value = "categoryId" ,defaultValue = "0") Integer categoryId){
@@ -51,6 +74,12 @@ public class CategoryManageController {
     	return iCategoryService.getChildrenParallelCategory(categoryId);
     }
 
+    /**
+     * 
+     * 
+     * @param categoryId
+     * @return
+     */
     @RequestMapping("get_deep_category.do")
     @ResponseBody
     public ServerResponse getCategoryAndDeepChildrenCategory(@RequestParam(value = "categoryId" ,defaultValue = "0") Integer categoryId){
