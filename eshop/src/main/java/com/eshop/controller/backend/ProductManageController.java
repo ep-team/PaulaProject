@@ -58,9 +58,9 @@ public class ProductManageController {
      * @param product
      * @return
      */
-    @RequestMapping("save.do")
+    @RequestMapping("save_product.do")
     @ResponseBody
-   public ServerResponse productSave(Product product){
+   public ServerResponse saveProduct(Product product){
         return iProductService.saveOrUpdateProduct(product);
     }
   
@@ -86,9 +86,9 @@ public class ProductManageController {
      * @param productId
      * @return
      */
-    @RequestMapping("detail.do")
+    @RequestMapping("get_product_details.do")
     @ResponseBody
-    public ServerResponse getDetail(Integer productId){
+    public ServerResponse getProductDetail(Integer productId){
     	
     	//get the details of product by filtering productId
     	return iProductService.manageProductDetail(productId);
@@ -103,9 +103,9 @@ public class ProductManageController {
      * @param pageSize
      * @return
      */
-    @RequestMapping("list.do")
+    @RequestMapping("get_product_list.do")
     @ResponseBody
-    public ServerResponse getList(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum,@RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
+    public ServerResponse getProductList(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum,@RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
     	 return iProductService.getProductList(pageNum,pageSize);
     }
     
@@ -119,9 +119,9 @@ public class ProductManageController {
      * @param pageSize
      * @return
      */
-    @RequestMapping("search.do")
+    @RequestMapping("search_product.do")
     @ResponseBody
-    public ServerResponse productSearch(String productName,Integer productId, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum,@RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
+    public ServerResponse searchProduct(String productName,Integer productId, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum,@RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
     	return iProductService.searchProduct(productName,productId,pageNum,pageSize);
     }
 
@@ -133,9 +133,9 @@ public class ProductManageController {
      * @param file
      * @return
      */
-    @RequestMapping("upload.do")
+    @RequestMapping("upload_txt_file.do")
     @ResponseBody
-  public ServerResponse upload(HttpServletRequest request, @RequestParam(value = "upload_file",required = false) MultipartFile file){
+  public ServerResponse uploadTxtFile(HttpServletRequest request, @RequestParam(value = "upload_file",required = false) MultipartFile file){
     	//Get the path of upload file(in this backend server) which temporarily save the upload_file
     	String path = request.getSession().getServletContext().getRealPath("upload");
     	//Upload the file from this backend server to ftp server
@@ -162,7 +162,7 @@ public class ProductManageController {
     /*
      * 富文本文件上传
      */
-    @RequestMapping("richtext_img_upload.do")
+    @RequestMapping("upload_richtext_img.do")
     @ResponseBody
     public Map richtextImgUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "upload_file",required = false) MultipartFile file){
     	Map resultMap = Maps.newHashMap();
