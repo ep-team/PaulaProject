@@ -15,7 +15,7 @@ public interface ICartService {
 	 * @param count
 	 * @return
 	 */
-    ServerResponse<CartVo> add(Integer userId, Integer productId, Integer count);
+    ServerResponse<CartVo> addProduct(Integer userId, Integer productId, Integer count);
     
     /**
      * 
@@ -24,7 +24,7 @@ public interface ICartService {
      * @param count
      * @return
      */
-    ServerResponse<CartVo> update(Integer userId,Integer productId,Integer count);
+    ServerResponse<CartVo> updateProduct(Integer userId,Integer productId,Integer count);
     
     /**
      * 
@@ -39,7 +39,7 @@ public interface ICartService {
      * @param userId
      * @return
      */
-    ServerResponse<CartVo> list (Integer userId);
+    ServerResponse<CartVo> listCart (Integer userId);
     
     /**
      * 
@@ -48,7 +48,7 @@ public interface ICartService {
      * @param checked
      * @return
      */
-    ServerResponse<CartVo> selectOrUnSelect (Integer userId,Integer productId,Integer checked);
+    ServerResponse<CartVo> selectOrUnSelectProduct (Integer userId,Integer productId,Integer checked);
     
     /**
      * 

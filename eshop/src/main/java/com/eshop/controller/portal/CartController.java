@@ -21,6 +21,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+/**
+ * Description: 
+ * This is the controller to handle the request to query or update the shopping cart:
+ * 		1.	Get the list for shopping cart, including product, unit price, purchase volume and total price of products.
+ *		2.	Update purchase volume of one product in shopping cart.
+ *		3.	Delete one product in shopping cart.
+ *		4.	Mark one or all the products in shopping cart as selected status or unselected status
+ *		5.	Get the quantity of products in shopping cart which is used to show in the upper-right corner of the eshop page.
+ *		    For example,  purchase volume of product A is 10, purchase volume of product B is 10, 
+ *          then the quantity of products for the shopping cart is 30.
+ * 
+ * @author Paula Lin
+ *
+ */
 @Controller
 @RequestMapping("/cart/")
 public class CartController {
@@ -29,211 +43,285 @@ public class CartController {
     @Autowired
     private ICartService iCartService;
 
-    /*
+    /**
+     * Description: 
+     * This method handler is to get the list for shopping cart, including product, unit price, purchase volume and total price of products.
      * 查询购物车
+     * 
+     * @param httpServletRequest
+     * @return
      */
-    @RequestMapping("list.do")
+    
+    @RequestMapping("list_Cart.do")
     @ResponseBody
-    //二期修改-start
-    //public ServerResponse<CartVo> list(HttpSession session){
-    public ServerResponse<CartVo> list(HttpServletRequest httpServletRequest){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<CartVo> listCart(HttpServletRequest httpServletRequest){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
+		//Transfer json string of user info to User object.
 		User user = JsonUtil.string2Obj(userJsonStr, User.class);
-    //二期修改-end
+		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iCartService.list(user.getId());
+        
+        return iCartService.listCart(user.getId());
     }
 
-    /*
+    /**
+     * Description: 
+     * This method handler is to add one product and  purchase volume to shopping cart.
      * 添加商品到购物车
+     * 
+     * @param httpServletRequest
+     * @param count
+     * @param productId
+     * @return
      */
-    @RequestMapping("add.do")
+    @RequestMapping("add_product.do")
     @ResponseBody
-    //二期修改-start
-    //public ServerResponse<CartVo> add(HttpSession session, Integer count, Integer productId){
-    public ServerResponse<CartVo> add(HttpServletRequest httpServletRequest, Integer count, Integer productId){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<CartVo> addProduct(HttpServletRequest httpServletRequest, Integer count, Integer productId){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
+		//Transfer json string of user info to User object.
 		User user = JsonUtil.string2Obj(userJsonStr, User.class);
-    //二期修改-end
+		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iCartService.add(user.getId(),productId,count);
+        return iCartService.addProduct(user.getId(),productId,count);
     }
 
-
-    /*
+    /**
+     * Description: 
+     * This method handler is to update purchase volume of one product in shopping cart.
      * 更新购物车,即更新购物车中商品的的数量
+     * 
+     * @param httpServletRequest
+     * @param count
+     * @param productId
+     * @return
      */
-    @RequestMapping("update.do")
+    @RequestMapping("update_product.do")
     @ResponseBody
-    //二期修改-start
-    // ServerResponse<CartVo> update(HttpSession session, Integer count, Integer productId){
-    ServerResponse<CartVo> update(HttpServletRequest httpServletRequest, Integer count, Integer productId){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    ServerResponse<CartVo> updateProduct(HttpServletRequest httpServletRequest, Integer count, Integer productId){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
+		//Transfer json string of user info to User object.
 		User user = JsonUtil.string2Obj(userJsonStr, User.class);
-    //二期修改-end
+		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iCartService.update(user.getId(),productId,count);
+        return iCartService.updateProduct(user.getId(),productId,count);
     }
 
-    /*
+    /**
+     * Description: 
+     * This method handler is to delete one product in shopping cart.
      * 删除购物车中的商品
+     * 
+     * @param httpServletRequest
+     * @param productIds
+     * @return
      */
     @RequestMapping("delete_product.do")
     @ResponseBody
-    //二期修改-start
-    //public ServerResponse<CartVo> deleteProduct(HttpSession session,String productIds){
     public ServerResponse<CartVo> deleteProduct(HttpServletRequest httpServletRequest,String productIds){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
+		//Transfer json string of user info to User object.
 		User user = JsonUtil.string2Obj(userJsonStr, User.class);
-    //二期修改-end
+		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
         return iCartService.deleteProduct(user.getId(),productIds);
     }
 
-    /*
+    /**
+     * Description: 
+     * This method handler is to mark all the products in shopping cart as selected status.
      * 全选购物车中的所有商品
+     * 
+     * @param httpServletRequest
+     * @return
      */
-    @RequestMapping("select_all.do")
+    @RequestMapping("select_all_products.do")
     @ResponseBody
-    //二期修改-end
-    //public ServerResponse<CartVo> selectAll(HttpSession session){
-    public ServerResponse<CartVo> selectAll(HttpServletRequest httpServletRequest){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<CartVo> selectAllProducts(HttpServletRequest httpServletRequest){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
+		//Transfer json string of user info to User object.
 		User user = JsonUtil.string2Obj(userJsonStr, User.class);
-    //二期修改-end
+		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iCartService.selectOrUnSelect(user.getId(),null,Const.Cart.CHECKED);
+        return iCartService.selectOrUnSelectProduct(user.getId(),null,Const.Cart.CHECKED);
     }
 
-    /*
+    /**
+     * Description: 
+     * This method handler is to mark all the products in shopping cart as unselected status.
      * 取消勾选购物车中的所有商品
+     * 
+     * @param httpServletRequest
+     * @return
      */
-    @RequestMapping("un_select_all.do")
+    @RequestMapping("un_select_all_products.do")
     @ResponseBody
-    //二期修改-start
-    //public ServerResponse<CartVo> unSelectAll(HttpSession session){
-    public ServerResponse<CartVo> unSelectAll(HttpServletRequest httpServletRequest){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<CartVo> unSelectAllProducts(HttpServletRequest httpServletRequest){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
+		//Transfer json string of user info to User object.
 		User user = JsonUtil.string2Obj(userJsonStr, User.class);
-    //二期修改-end
+		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iCartService.selectOrUnSelect(user.getId(),null,Const.Cart.UN_CHECKED);
+        return iCartService.selectOrUnSelectProduct(user.getId(),null,Const.Cart.UN_CHECKED);
     }
 
-
-    /*
+    /**
+     * Description: 
+     * This method handler is to mark one the products in shopping cart as selected status.
      * 单独选购物车中的某个商品
+     * 
+     * @param httpServletRequest
+     * @param productId
+     * @return
      */
-    @RequestMapping("select.do")
+    @RequestMapping("select_one_product.do")
     @ResponseBody
-    //二期修改-start
-    //public ServerResponse<CartVo> select(HttpSession session,Integer productId){
-    public ServerResponse<CartVo> select(HttpServletRequest httpServletRequest,Integer productId){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse<CartVo> selectOneProduct(HttpServletRequest httpServletRequest,Integer productId){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
+		//Transfer json string of user info to User object.
 		User user = JsonUtil.string2Obj(userJsonStr, User.class);
-    //二期修改-end
+		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iCartService.selectOrUnSelect(user.getId(),productId,Const.Cart.CHECKED);
+        return iCartService.selectOrUnSelectProduct(user.getId(),productId,Const.Cart.CHECKED);
     }
 
-    /*
+    /**
+     * Description: 
+     * This method handler is to mark one the products in shopping cart as selected status.
+     * 
      * 单独反选购物车中某个商品
+     * 
+     * @param httpServletRequest
+     * @param productId
+     * @return
      */
-    @RequestMapping("un_select.do")
+    @RequestMapping("un_select_one_product.do")
     @ResponseBody
-    //二期修改-start
-    // ServerResponse<CartVo> unSelect(HttpSession session,Integer productId){
-    ServerResponse<CartVo> unSelect(HttpServletRequest httpServletRequest,Integer productId){
-        	//User user = (User)session.getAttribute(Const.CURRENT_USER);
-        	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
-    		if(StringUtils.isEmpty(loginToken)) {
-    			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
-    		}
-    		String userJsonStr = RedisPoolUtil.get(loginToken);
-    		User user = JsonUtil.string2Obj(userJsonStr, User.class);
-        //二期修改-end
-    		
+    ServerResponse<CartVo> unSelectOneProduct(HttpServletRequest httpServletRequest,Integer productId){
+    	//Retrieve loginToken from request
+    	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
+		if(StringUtils.isEmpty(loginToken)) {
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
+		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
+		String userJsonStr = RedisPoolUtil.get(loginToken);
+		//Transfer json string of user info to User object.
+		User user = JsonUtil.string2Obj(userJsonStr, User.class);
+		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iCartService.selectOrUnSelect(user.getId(),productId,Const.Cart.UN_CHECKED);
+        return iCartService.selectOrUnSelectProduct(user.getId(),productId,Const.Cart.UN_CHECKED);
     }
 
-
-    /*
-     * 查询当前用户的购物车里面的产品数量,如果产品a有10个,产品b有20个,那么数量就是30.
-     * 用于显示在页面右上角的购物车上
+    /**
+     * Description: 
+     * This method handler is to get the count of products in shopping cart which is used to show in the upper-right corner of the eshop page.
+     * For example,  purchase volume of product A is 10, purchase volume of product B is 10, then the count of products for the shopping cart is 30.
+     * 查询当前用户的购物车里面的产品数量,用于显示在页面右上角的购物车上. 例如产品a有10个,产品b有20个,那么购物车数量就是30.
+     * 
+     * @param httpServletRequest
+     * @return
      */
     @RequestMapping("get_cart_product_count.do")
     @ResponseBody
-    //二期修改-start
-    //public ServerResponse<Integer> getCartProductCount(HttpSession session){
     public ServerResponse<Integer> getCartProductCount(HttpServletRequest httpServletRequest){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User user = JsonUtil.string2Obj(userJsonStr, User.class);		
-     //二期修改-end
+		//Transfer json string of user info to User object.
+		User user = JsonUtil.string2Obj(userJsonStr, User.class);
+			
         if(user ==null){
             return ServerResponse.createBySuccess(0);
         }
         return iCartService.getCartProductCount(user.getId());
     }
-
-
-
-
 
 }
