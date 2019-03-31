@@ -27,21 +27,13 @@ public enum EshopConstant {
 	CANNOT_FIND_CURRENT_USER("找不到当前用户"),
 	
 	/**
-	 * 此字段不具有任何业务意义，只是用于判断文件执行成功时是否显示遮罩层：1：显示，0：不显示
+	 * Eshop Category
 	 * */
-	SHOW_SUCCESS_LAYER_ZERO(0),
-	SHOW_SUCCESS_LATYER_ONE(1),
-	
-	/**
-	 * 此字段不具有任何业务意义，只是用于判断文件执行失败时是否显示遮罩层：4：显示，3：不显示
-	 * */
-	SHOW_FAILED_LAYER_THREE(3),
-	SHOW_FAILED_LATYER_FOUR(4),
-	
-	/**
-	 * 上下文/模型文件语法校验成功时，API没有日志输出，因此构造此常量以作为成功时的日志信息
-	 * */
-	FILE_SYNAX_VALIDATE_SUCCESS("文件语法校验成功");
+	ADD_CATEGORY_SUCCESS("添加品类成功"),
+	ADD_CATEGORY_FAILED("添加品类失败"),
+	ADD_CATEGORY_PARMS_ERROR("添加品类参数错误"),
+	UPDATE_CATEGORY_SUCCESS("更新品类名字成功"),
+	UPDATE_CATEGORY_FAILED("更新品类名字失败");
 	
 	private Integer value;
 	

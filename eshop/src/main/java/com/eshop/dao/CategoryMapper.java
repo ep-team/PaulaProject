@@ -51,4 +51,9 @@ public interface CategoryMapper {
      * @return
      */
     List<Category> selectCategoryChildrensByParentId(Integer parentId);
+    
+    /**
+     * @return
+     */
+    List<Category> findCategoryListInfo();
 }

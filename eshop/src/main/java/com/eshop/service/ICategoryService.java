@@ -42,4 +42,8 @@ public interface ICategoryService {
      */
     ServerResponse<List<Integer>> selectCategoryAndChildrenById(Integer categoryId);
 
+    /**
+     * @return
+     */
+    List<Category> findCategoryListInfo();
 }

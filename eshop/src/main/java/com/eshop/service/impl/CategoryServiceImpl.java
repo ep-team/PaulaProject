@@ -1,5 +1,6 @@
 package com.eshop.service.impl;
 
+import com.eshop.common.EshopConstant;
 import com.eshop.common.ServerResponse;
 import com.eshop.dao.CategoryMapper;
 import com.eshop.pojo.Category;
@@ -38,7 +39,7 @@ public class CategoryServiceImpl implements ICategoryService {
 	 */
     public ServerResponse addCategory(String categoryName,Integer parentId){
         if(parentId == null || StringUtils.isBlank(categoryName)){
-            return ServerResponse.createByErrorMessage("添加品类参数错误");
+            return ServerResponse.createByErrorMessage(EshopConstant.ADD_CATEGORY_PARMS_ERROR.toString());
         }
 
         Category category = new Category();
@@ -48,9 +49,9 @@ public class CategoryServiceImpl implements ICategoryService {
 
         int rowCount = categoryMapper.insertCategory(category);
         if(rowCount > 0){
-            return ServerResponse.createBySuccess("添加品类成功");
+            return ServerResponse.createBySuccess(EshopConstant.ADD_CATEGORY_SUCCESS.toString());
         }
-        return ServerResponse.createByErrorMessage("添加品类失败");
+        return ServerResponse.createByErrorMessage(EshopConstant.ADD_CATEGORY_FAILED.toString());
     }
 
     /**
@@ -69,9 +70,9 @@ public class CategoryServiceImpl implements ICategoryService {
 
         int rowCount = categoryMapper.updateCategoryByPrimaryKeySelective(category);
         if(rowCount > 0){
-            return ServerResponse.createBySuccess("更新品类名字成功");
+            return ServerResponse.createBySuccess(EshopConstant.UPDATE_CATEGORY_SUCCESS.toString());
         }
-        return ServerResponse.createByErrorMessage("更新品类名字失败");
+        return ServerResponse.createByErrorMessage(EshopConstant.UPDATE_CATEGORY_FAILED.toString());
     }
 
     /**
@@ -128,6 +129,11 @@ public class CategoryServiceImpl implements ICategoryService {
         }
         return categorySet;
     }
+
+	@Override
+	public List<Category> findCategoryListInfo() {
+		return categoryMapper.findCategoryListInfo();
+	}
 
 
 

@@ -21,6 +21,11 @@
     from eshop_category
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="findCategoryListInfo" resultMap="categoryBaseResultMap">
+    select 
+    <include refid="category_Base_Column_List" />
+    from eshop_category
+  </select>
   <delete id="deleteCategoryByPrimaryKey" parameterType="java.lang.Integer">
     delete from eshop_category
     where id = #{id,jdbcType=INTEGER}
