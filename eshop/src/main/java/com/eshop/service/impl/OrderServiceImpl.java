@@ -298,23 +298,25 @@ public class OrderServiceImpl implements IOrderService {
 		for (Cart cartItem : cartList) {
 			OrderItem orderItem = new OrderItem();
 			Product product = productMapper.selectProductMapperByPrimaryKey(cartItem.getProductId());
-			if (Const.ProductStatusEnum.ON_SALE.getCode() != product.getStatus()) {
+			if (product != null && Const.ProductStatusEnum.ON_SALE.getCode() != product.getStatus()) {
 				return ServerResponse.createByErrorMessage("产品" + product.getName() + "不是在线售卖状态");
 			}
 
 			// 校验库存
-			if (cartItem.getQuantity() > product.getStock()) {
+			if (product != null && cartItem.getQuantity() > product.getStock()) {
 				return ServerResponse.createByErrorMessage("产品" + product.getName() + "库存不足");
 			}
 
 			orderItem.setUserId(userId);
-			orderItem.setProductId(product.getId());
-			orderItem.setProductName(product.getName());
-			orderItem.setProductImage(product.getMainImage());
-			orderItem.setCurrentUnitPrice(product.getPrice());
-			orderItem.setQuantity(cartItem.getQuantity());
-			orderItem.setTotalPrice(BigDecimalUtil.mul(product.getPrice().doubleValue(), cartItem.getQuantity()));
-			orderItemList.add(orderItem);
+			if (product != null) {
+				orderItem.setProductId(product.getId());
+				orderItem.setProductName(product.getName());
+				orderItem.setProductImage(product.getMainImage());
+				orderItem.setCurrentUnitPrice(product.getPrice());
+				orderItem.setQuantity(cartItem.getQuantity());
+				orderItem.setTotalPrice(BigDecimalUtil.mul(product.getPrice().doubleValue(), cartItem.getQuantity()));
+				orderItemList.add(orderItem);
+			} 
 		}
 		return ServerResponse.createBySuccess(orderItemList);
 	}
