@@ -190,4 +190,9 @@
   <select id="checkUsersPassword" resultType="int" parameterType="map">
   	select count(1) from eshop_user where id=#{userId} and password = #{password}
   </select>
+  <select id="findUserListInfo" resultMap="userBaseResultMap">
+    select 
+    <include refid="userBase_Column_List" />
+    from eshop_user
+  </select>
 </mapper>

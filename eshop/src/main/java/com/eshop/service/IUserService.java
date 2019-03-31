@@ -1,5 +1,7 @@
 package com.eshop.service;
 
+import java.util.List;
+
 import com.eshop.common.ServerResponse;
 import com.eshop.pojo.User;
 
@@ -76,4 +78,9 @@ public interface IUserService {
 	 * @return
 	 */
 	public ServerResponse checkAdminRole(User user);
+	
+	/**
+	 * @return
+	 */
+	public List<User> findUserListInfo();
 }

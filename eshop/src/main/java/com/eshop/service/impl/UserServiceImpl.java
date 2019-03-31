@@ -1,5 +1,6 @@
 package com.eshop.service.impl;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import com.eshop.common.ServerResponse;
 import com.eshop.dao.UserMapper;
 import com.eshop.pojo.User;
 import com.eshop.service.IUserService;
+import com.eshop.utilities.EshopConstant;
 import com.eshop.utilities.MD5Util;
 import com.eshop.utilities.RedisPoolUtil;
 
@@ -38,17 +40,17 @@ public class UserServiceImpl implements IUserService {
 	public ServerResponse<User> login(String username, String password) {
 		int resultCount = userMapper.checkUsesUserName(username);
 		if (resultCount == 0) {
-			return ServerResponse.createByErrorMessage("用户名不存在");
+			return ServerResponse.createByErrorMessage(EshopConstant.USER_NOT_EXIST.toString());
 		}
 		// 密码登录MD5
 		String md5Password = MD5Util.MD5EncodeUtf8(password);
 		User user = userMapper.selectUserLoginInfo(username, md5Password);
 		if (user == null) {
-			return ServerResponse.createByErrorMessage("密码错误");
+			return ServerResponse.createByErrorMessage(EshopConstant.PASSWORD_ERROR.toString());
 		}
 
 		user.setPassword(org.apache.commons.lang3.StringUtils.EMPTY);
-		return ServerResponse.createBySuccess("登录成功", user);
+		return ServerResponse.createBySuccess(EshopConstant.LOGIN_SUCCESS.toString(), user);
 	}
 
 	/**
@@ -163,7 +165,7 @@ public class UserServiceImpl implements IUserService {
 	 */
 	public ServerResponse<String> forgetResetPassword(String username, String passwordNew, String forgetToken) {
 		if (org.apache.commons.lang3.StringUtils.isBlank(forgetToken)) {
-			return ServerResponse.createByErrorMessage("参数错误,token需要传递");
+			return ServerResponse.createByErrorMessage(EshopConstant.PARMS_ERROR_NEED_TOKEN.toString());
 		}
 		// 校验用户名是否存在
 		ServerResponse validatedResponse = this.checkValid(username, Const.USERNAME);
@@ -177,19 +179,19 @@ public class UserServiceImpl implements IUserService {
 		//二期修改-end
 		
 		if(org.apache.commons.lang3.StringUtils.isBlank(token)) {
-			return ServerResponse.createByErrorMessage("token无效或者过期");
+			return ServerResponse.createByErrorMessage(EshopConstant.TOKEN_INVALIDATE.toString());
 		}
 		
 		if(org.apache.commons.lang3.StringUtils.equals(forgetToken, token)) {
 			String md5Password = MD5Util.MD5EncodeUtf8(passwordNew);
 			int rowCount = userMapper.updateUsersPasswordByUsername(username, md5Password);
 			if (rowCount>0) {
-				return ServerResponse.createBySuccessMessage("修改密码成功");
+				return ServerResponse.createBySuccessMessage(EshopConstant.CHANGE_PASSWORD_SUCCESS.toString());
 			}
 		}else{
-			return ServerResponse.createByErrorMessage("token错误,请重新获取重置密码的token");
+			return ServerResponse.createByErrorMessage(EshopConstant.TOKEN_ERROR_NEED_REGET.toString());
 		}
-		return ServerResponse.createByErrorMessage("修改密码失败");
+		return ServerResponse.createByErrorMessage(EshopConstant.CHANGE_PASSWORD_FALED.toString());
 	}
 
 	/**
@@ -201,16 +203,17 @@ public class UserServiceImpl implements IUserService {
 	 */
 	public ServerResponse<String> resetPassword(String passwordOld, String passwordNew, User user) {
 		//为防止横向越线,要校验一下这个用户的旧密码, 一定要指定是这个用户,因为我们会查询一个count(1),如果不指定id,那么结果就是ture或count>0
+		System.out.println(MD5Util.MD5EncodeUtf8(passwordOld));
 		int resultCount = userMapper.checkUsersPassword(MD5Util.MD5EncodeUtf8(passwordOld), user.getId());
 		if(resultCount ==0) {
-			return ServerResponse.createByErrorMessage("旧密码错误");
+			return ServerResponse.createByErrorMessage(EshopConstant.PRE_PASSWORD_ERROR.toString());
 		}
 		user.setPassword(MD5Util.MD5EncodeUtf8(passwordNew));
 		int updateCount = userMapper.updateUserByPrimaryKeySelective(user);
 		if(updateCount>0) {
-			return ServerResponse.createBySuccessMessage("密码更新成功");
+			return ServerResponse.createBySuccessMessage(EshopConstant.UPDATE_PASSWORD_SUCCESS.toString());
 		}
-		return ServerResponse.createByErrorMessage("密码更新失败");
+		return ServerResponse.createByErrorMessage(EshopConstant.UPDATE_PASSWORD_SUCCESS.toString());
 	}
 	
 	/**
@@ -235,9 +238,9 @@ public class UserServiceImpl implements IUserService {
 		//只更新Id,email,phone,question,answer, updateTime
 		int updateCount = userMapper.updateUserByPrimaryKeySelective(updateUser);
 		if(updateCount > 0) {
-			return ServerResponse.createBySuccess("更新个人信息成功", updateUser);
+			return ServerResponse.createBySuccess(EshopConstant.UPDATE_USER_INFO_SUCCESS.toString(), updateUser);
 		}
-		return ServerResponse.createByErrorMessage("更新个人信息失败");
+		return ServerResponse.createByErrorMessage(EshopConstant.UPDATE_USER_INFO_FAILED.toString());
 	}
 	
 	/**
@@ -248,7 +251,7 @@ public class UserServiceImpl implements IUserService {
 	public ServerResponse<User> getInfomation(Integer userId) {
 		User user = userMapper.selectUserByPrimaryKey(userId);
 		if(user == null) {
-			return ServerResponse.createByErrorMessage("找不到当前用户");
+			return ServerResponse.createByErrorMessage(EshopConstant.CANNOT_FIND_CURRENT_USER.toString());
 		}
 		user.setPassword(org.apache.commons.lang3.StringUtils.EMPTY);
 		return ServerResponse.createBySuccess(user);
@@ -266,4 +269,9 @@ public class UserServiceImpl implements IUserService {
         }
         return ServerResponse.createByError();
     }
+
+	@Override
+	public List<User> findUserListInfo() {
+		return userMapper.findUserListInfo();
+	}
 }

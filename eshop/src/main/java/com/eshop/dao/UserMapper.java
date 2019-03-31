@@ -1,5 +1,7 @@
 package com.eshop.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.eshop.pojo.User;
@@ -40,5 +42,7 @@ public interface UserMapper {
     int checkUsersPassword(@Param("password")String password, @Param("userId")Integer userId);
     
     int checkUsersEmailInfoByUserId(@Param("email")String email, @Param("userId")Integer userId);
+    
+    List<User> findUserListInfo();
     
 }
