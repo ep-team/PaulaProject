@@ -17,7 +17,7 @@ public interface IOrderService {
 	 * @param path
 	 * @return
 	 */
-    ServerResponse pay(Long orderNo, Integer userId, String path);
+    ServerResponse getQrCodeAddressForPayment(Long orderNo, Integer userId, String path);
     
     /**
      * 
@@ -47,14 +47,14 @@ public interface IOrderService {
      * @param orderNo
      * @return
      */
-    ServerResponse<String> cancel(Integer userId,Long orderNo);
+    ServerResponse<String> cancelOrder(Integer userId,Long orderNo);
     
     /**
      * 
      * @param userId
      * @return
      */
-    ServerResponse getOrderCartProduct(Integer userId);
+    ServerResponse getOrderByCartProduct(Integer userId);
     
     /**
      * 

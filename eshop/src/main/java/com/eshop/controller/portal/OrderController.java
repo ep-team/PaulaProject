@@ -26,7 +26,21 @@ import javax.servlet.http.HttpSession;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * Description: 
+ * This is the controller to handle the request from frontend system and alipay system to create and query order and payment transaction.
+ * 		1.	Create new order
+ *		2.	Cancel order
+ *		3.	Get the previewed order for the selected products in shopping cart.
+ *		4.	Get the details of one order.
+ *		5.	Get order list  one user.
+ *		6.	Get the ftp address of qr code of payment for one order.
+ *		7.	Get the callback information from alipay to validate payment transaction for order.
+ *		8.	Check the status of payment.
 
+ * @author Paula Lin
+ *
+ */
 @Controller
 @RequestMapping("/order/")
 public class OrderController {
@@ -36,20 +50,29 @@ public class OrderController {
     @Autowired
     private IOrderService iOrderService;
 
-
-    @RequestMapping("create.do")
+    /**
+     * Description: 
+     * This method handler is to create new order with shipping address.
+     * 
+     * @param httpServletRequest
+     * @param shippingId
+     * @return
+     */
+    @RequestMapping("create_order.do")
     @ResponseBody
-  //二期修改-start
-    //public ServerResponse create(HttpSession session, Integer shippingId){
-    public ServerResponse create(HttpServletRequest httpServletRequest, Integer shippingId){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse createOrder(HttpServletRequest httpServletRequest, Integer shippingId){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User user = JsonUtil.string2Obj(userJsonStr, User.class);		
-     //二期修改-end
+		//Transfer json string of user info to User object.
+		User user = JsonUtil.string2Obj(userJsonStr, User.class);
 		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
@@ -57,145 +80,181 @@ public class OrderController {
         return iOrderService.createOrder(user.getId(),shippingId);
     }
 
-
-    @RequestMapping("cancel.do")
+    /**
+     * Description: 
+     * This method handler is to cancel one order.
+     * 
+     * @param httpServletRequest
+     * @param orderNo
+     * @return
+     */
+    @RequestMapping("cancel_order.do")
     @ResponseBody
-    //二期修改-start
-    //public ServerResponse cancel(HttpSession session, Long orderNo){
-    public ServerResponse cancel(HttpServletRequest httpServletRequest, Long orderNo){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse cancelOrder(HttpServletRequest httpServletRequest, Long orderNo){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User user = JsonUtil.string2Obj(userJsonStr, User.class);		
-     //二期修改-end
-        if(user ==null){
+		//Transfer json string of user info to User object.
+		User user = JsonUtil.string2Obj(userJsonStr, User.class);
+		
+    	if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iOrderService.cancel(user.getId(),orderNo);
+        return iOrderService.cancelOrder(user.getId(),orderNo);
     }
 
 
-    @RequestMapping("get_order_cart_product.do")
+    /**
+     * Description: 
+     * This method handler is to get the previewed order for the selected products in shopping cart.
+     * 
+     * @param httpServletRequest
+     * @return
+     */
+    @RequestMapping("get_previewed_order.do")
     @ResponseBody
-    //二期修改-start
-    //public ServerResponse getOrderCartProduct(HttpSession session){
-    public ServerResponse getOrderCartProduct(HttpServletRequest httpServletRequest){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse getPreviewedOrder(HttpServletRequest httpServletRequest){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User user = JsonUtil.string2Obj(userJsonStr, User.class);		
-     //二期修改-end
-        if(user ==null){
+		//Transfer json string of user info to User object.
+		User user = JsonUtil.string2Obj(userJsonStr, User.class);
+		
+    	if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
-        return iOrderService.getOrderCartProduct(user.getId());
+        return iOrderService.getOrderByCartProduct(user.getId());
     }
 
 
-
-    @RequestMapping("detail.do")
+    /**
+     * Description: 
+     * This method handler is to get the details of one order.
+     * 
+     * @param httpServletRequest
+     * @param orderNo
+     * @return
+     */
+    @RequestMapping("get_order_detail.do")
     @ResponseBody
-    //二期修改-start
-    //public ServerResponse detail(HttpSession session,Long orderNo){
-    public ServerResponse detail(HttpServletRequest httpServletRequest,Long orderNo){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse getOrderdetail(HttpServletRequest httpServletRequest,Long orderNo){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User user = JsonUtil.string2Obj(userJsonStr, User.class);		
-     //二期修改-end
-        if(user ==null){
+		//Transfer json string of user info to User object.
+		User user = JsonUtil.string2Obj(userJsonStr, User.class);
+		
+		if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
         return iOrderService.getOrderDetail(user.getId(),orderNo);
     }
 
-    @RequestMapping("list.do")
+    /**
+     * Description: 
+     * This method handler is to get order list  one user.
+     * 
+     * @param httpServletRequest
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping("get_order_list.do")
     @ResponseBody
-    //二期修改-start
-    //public ServerResponse list(HttpSession session, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum, @RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
-    public ServerResponse list(HttpServletRequest httpServletRequest, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum, @RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse getOrderList(HttpServletRequest httpServletRequest, @RequestParam(value = "pageNum",defaultValue = "1") int pageNum, @RequestParam(value = "pageSize",defaultValue = "10") int pageSize){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User user = JsonUtil.string2Obj(userJsonStr, User.class);		
-     //二期修改-end
-        if(user ==null){
+		//Transfer json string of user info to User object.
+		User user = JsonUtil.string2Obj(userJsonStr, User.class);
+		
+		if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
         return iOrderService.getOrderList(user.getId(),pageNum,pageSize);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * Description: 
+     * This method handler is to get the ftp address of qr code of payment for one order.
+     * System return generated qr code of payment and then upload to ftp for further loading in front-end system.
+     * Then the buyer/user can scan the qr code for further payment.
+     * 
+     * @param httpServletRequest
+     * @param orderNo
+     * @param request
+     * @return
+     */
     /*
      * 支付功能
      * 为订单号orderNo支付
      */
-    @RequestMapping("pay.do")
+    @RequestMapping("get_qrCode_addres.do")
     @ResponseBody
-  //二期修改-start
-    //public ServerResponse pay(HttpSession session, Long orderNo, HttpServletRequest request){
-    public ServerResponse pay(HttpServletRequest httpServletRequest, Long orderNo, HttpServletRequest request){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse getQrCodeAddressForPayment(HttpServletRequest httpServletRequest, Long orderNo, HttpServletRequest request){
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User user = JsonUtil.string2Obj(userJsonStr, User.class);		
-     //二期修改-end
+		//Transfer json string of user info to User object.
+		User user = JsonUtil.string2Obj(userJsonStr, User.class);
+		
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
         
-        //获取upload文件夹的路径 ,将该路径的下的二维码上传到ftp服务器上,然后返回给前端该二维码图片的地址,然后前端把二维码图片进行展示,让买家扫码支付
         String path = request.getSession().getServletContext().getRealPath("upload");
-        return iOrderService.pay(orderNo,user.getId(),path);
+        return iOrderService.getQrCodeAddressForPayment(orderNo,user.getId(),path);
     }
 
-    /*
+    /**
+     * Description: 
+     * This method handler is handle get the callback information from alipay to validate payment transaction for order.
+     * 
      * 支付宝的回调函数
-     * 返回值类型为Object为支付宝要求的
-     * 传参是HttpServletRequest request, 支付宝的参数会放到HttpServletRequest中供我们获取
+     * 
+     * @param request, HttpServletRequest from alipay
+     * @return
      */
     @RequestMapping("alipay_callback.do")
     @ResponseBody
     public Object alipayCallback(HttpServletRequest request){
+    	//Parse the request paramater from alipay and put to Map<String, String> params.
         Map<String,String> params = Maps.newHashMap();
-        //requestParams<String, String[]>
-        //requestParams转化为params->Map<String, String>
         Map requestParams = request.getParameterMap();
         for(Iterator iter = requestParams.keySet().iterator();iter.hasNext();){
             String name = (String)iter.next();
@@ -207,28 +266,22 @@ public class OrderController {
             }
             params.put(name,valueStr);
         }
-        //sign为签名
-        logger.info("支付宝回调,sign:{},trade_status:{},参数:{}",params.get("sign"),params.get("trade_status"),params.toString());
+        logger.info("Callback from alipay ,sign:{},trade_status:{}, params:{}",params.get("sign"),params.get("trade_status"),params.toString());
 
-        //非常重要,验证回调的正确性,是不是支付宝发的.并且呢还要避免重复通知.
-        //通过调用AlipaySignature.rsaCheckV2()可以验证回调的正确性
-
+        //Using AlipaySignature.rsaCheckV2() to validate if the payment order is from alipay 
         params.remove("sign_type");
         try {
-        	//AlipaySignature.rsaCheckV2的传参分别为Map<String, String>, 支付宝的publicKey而不是商家的publicKey,字符集, signType为RSA2
             boolean alipayRSACheckedV2 = AlipaySignature.rsaCheckV2(params, Configs.getAlipayPublicKey(),"utf-8",Configs.getSignType());
-
+            
+            //if alipayRSACheckedV2(return from alipay) is false, that means the payment order is not valid in alipay
             if(!alipayRSACheckedV2){
-                return ServerResponse.createByErrorMessage("非法请求,验证不通过,再恶意请求我就报警找网警了");
+                return ServerResponse.createByErrorMessage("Invalid request...payment order is not valid in alipay, and will report to the police if receive it again!");
             }
         } catch (AlipayApiException e) {
-            logger.error("支付宝验证回调异常",e);
+            logger.error("Exception when callback validation from alipay",e);
         }
 
-        //TODO 验证各种数据
-
-
-        //
+        //Validate the payment transaction
         ServerResponse serverResponse = iOrderService.aliCallback(params);
         if(serverResponse.isSuccess()){
             return Const.AlipayCallback.RESPONSE_SUCCESS;
@@ -236,22 +289,32 @@ public class OrderController {
         return Const.AlipayCallback.RESPONSE_FAILED;
     }
 
-    /*
+    /**
+     * Description: 
+     * This method handler is to check the status of payment, check if the payment of product order has been completed.
+     *
      * 买家扫码付款成功后,前台会调用该接口,查看是否付款成功
+     * 
+     * @param httpServletRequest
+     * @param orderNo
+     * @return
      */
     @RequestMapping("query_order_pay_status.do")
     @ResponseBody
-  //二期修改-start
-    //public ServerResponse<Boolean> queryOrderPayStatus(HttpSession session, Long orderNo){
     public ServerResponse<Boolean> queryOrderPayStatus(HttpServletRequest httpServletRequest, Long orderNo){
-    	//User user = (User)session.getAttribute(Const.CURRENT_USER);
+    	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+    	
+    	//Check if loginToken is empty
 		if(StringUtils.isEmpty(loginToken)) {
-			return ServerResponse.createByErrorMessage("用户未登录, 无法获取当前用户的信息");
+			return ServerResponse.createByErrorMessage(Const.ErrorMessage.USER_NOT_LOGIN);
 		}
+		
+		//Retrieve json string of user information from Redis according to loginToken
 		String userJsonStr = RedisPoolUtil.get(loginToken);
-		User user = JsonUtil.string2Obj(userJsonStr, User.class);		
-     //二期修改-end
+		//Transfer json string of user info to User object.
+		User user = JsonUtil.string2Obj(userJsonStr, User.class);
+				
         if(user ==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),ResponseCode.NEED_LOGIN.getDesc());
         }
@@ -262,23 +325,5 @@ public class OrderController {
         }
         return ServerResponse.createBySuccess(false);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
 }

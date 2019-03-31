@@ -266,7 +266,7 @@ public class OrderServiceImpl implements IOrderService {
 		return ServerResponse.createBySuccess(orderItemList);
 	}
 
-	public ServerResponse<String> cancel(Integer userId, Long orderNo) {
+	public ServerResponse<String> cancelOrder(Integer userId, Long orderNo) {
 		Order order = orderMapper.selectOrderMapperByUserIdAndOrderNo(userId, orderNo);
 		if (order == null) {
 			return ServerResponse.createByErrorMessage("该用户此订单不存在");
@@ -285,7 +285,7 @@ public class OrderServiceImpl implements IOrderService {
 		return ServerResponse.createByError();
 	}
 
-	public ServerResponse getOrderCartProduct(Integer userId) {
+	public ServerResponse getOrderByCartProduct(Integer userId) {
 		OrderProductVo orderProductVo = new OrderProductVo();
 		// 从购物车中获取数据
 
@@ -344,7 +344,7 @@ public class OrderServiceImpl implements IOrderService {
 		return orderVoList;
 	}
 
-	public ServerResponse pay(Long orderNo, Integer userId, String path) {
+	public ServerResponse getQrCodeAddressForPayment(Long orderNo, Integer userId, String path) {
 		Map<String, String> resultMap = Maps.newHashMap();
 		Order order = orderMapper.selectOrderMapperByUserIdAndOrderNo(userId, orderNo);
 		if (order == null) {
