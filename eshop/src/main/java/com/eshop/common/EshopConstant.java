@@ -1,4 +1,4 @@
-package com.eshop.utilities;
+package com.eshop.common;
 
 public enum EshopConstant {
 	/**

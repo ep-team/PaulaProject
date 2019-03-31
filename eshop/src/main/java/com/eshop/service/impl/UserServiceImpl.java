@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.eshop.common.Const;
+import com.eshop.common.EshopConstant;
 import com.eshop.common.ServerResponse;
 import com.eshop.dao.UserMapper;
 import com.eshop.pojo.User;
 import com.eshop.service.IUserService;
-import com.eshop.utilities.EshopConstant;
 import com.eshop.utilities.MD5Util;
 import com.eshop.utilities.RedisPoolUtil;
 

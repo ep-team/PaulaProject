@@ -13,10 +13,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.eshop.common.EshopConstant;
 import com.eshop.common.ServerResponse;
 import com.eshop.pojo.User;
 import com.eshop.service.IUserService;
-import com.eshop.utilities.EshopConstant;
 import com.eshop.utilities.RedisPoolUtil;
 
 /**
