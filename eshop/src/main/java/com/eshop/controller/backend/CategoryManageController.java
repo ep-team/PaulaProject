@@ -14,7 +14,12 @@ import com.eshop.service.IUserService;
 
 /**
  * Description: 
- * This is the controller to handle the request for admin' access permission and user information management
+ * This is the controller to handle the request for product's category rule setting and query:
+ * 		1.	add category rule for products.
+ *		2.	reset category name for category.
+ *		3.	get all the children categories of category.
+ *		4.	get children categories which is directly under one parent category.
+ *		5.	get deep children categories of the parent category
  * 
  * @author Paula Lin
  *
@@ -33,7 +38,7 @@ public class CategoryManageController {
 
     /**
      * Description: 
-	 * This method handler is provided for admin user access and related validation.
+	 * This method handler is provided for the request to add category rule for products.
 	 * 
      * @param categoryName
      * @param parentId
@@ -41,16 +46,17 @@ public class CategoryManageController {
      */
     @RequestMapping("add_category.do")
     @ResponseBody
-    /*
-     * parentId: 父节点,默认值为0,即根节点
-     */
     public ServerResponse addCategory(String categoryName,@RequestParam(value = "parentId",defaultValue = "0") int parentId){
-    	//全部通过拦截器验证是否登录以及是否有操作权限
+    	
+    	//AuthorityInterceptor will intercept the request and validate the authority of the user before add category rule.
     	return iCategoryService.addCategory(categoryName,parentId);
     }
 
     /**
      * 
+     * Description: 
+	 * This method handler is provided for the request to reset category name for one category.
+	 * 
      * @param categoryId
      * @param categoryName
      * @return
@@ -58,32 +64,38 @@ public class CategoryManageController {
     @RequestMapping("set_category_name.do")
     @ResponseBody
     public ServerResponse setCategoryName(Integer categoryId,String categoryName){
-    	//全部通过拦截器验证是否登录以及是否有操作权限
+    	//AuthorityInterceptor will intercept the request and validate the authority of the user before add category rule.
     	return iCategoryService.updateCategoryName(categoryId,categoryName);
     }
     
     /**
      * 
+     * Description: 
+	 * This method handler is provided for the request to get children categories which is directly under one parent category.
+	 * 
      * @param categoryId
      * @return
      */
     @RequestMapping("get_category.do")
     @ResponseBody
     public ServerResponse getChildrenParallelCategory(@RequestParam(value = "categoryId" ,defaultValue = "0") Integer categoryId){
-    	//全部通过拦截器验证是否登录以及是否有操作权限
+    	//AuthorityInterceptor will intercept the request and validate the authority of the user before add category rule.
     	return iCategoryService.getChildrenParallelCategory(categoryId);
     }
 
     /**
      * 
-     * 
+     * Description: 
+	 * This method handler is provided for the request to get deep children categories of the parent category
+	 * including parent category's children categories and deep looping all children categories' children categories.
+	 * 
      * @param categoryId
      * @return
      */
     @RequestMapping("get_deep_category.do")
     @ResponseBody
     public ServerResponse getCategoryAndDeepChildrenCategory(@RequestParam(value = "categoryId" ,defaultValue = "0") Integer categoryId){
-    	//全部通过拦截器验证是否登录以及是否有操作权限
+    	//AuthorityInterceptor will intercept the request and validate the authority of the user before add category rule.
     	return iCategoryService.selectCategoryAndChildrenById(categoryId);
     }
 }
