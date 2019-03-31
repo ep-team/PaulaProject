@@ -1,5 +1,7 @@
 package com.eshop.service;
 
+import java.util.List;
+
 import com.eshop.common.ServerResponse;
 import com.eshop.pojo.Product;
 import com.eshop.vo.ProductDetailVo;
@@ -40,6 +42,11 @@ public interface IProductService {
      * @return
      */
     ServerResponse<PageInfo> getProductList(int pageNum, int pageSize);
+    
+    /**
+     * @return
+     */
+    List<Product> getAllProductList();
 
     /**
      * 

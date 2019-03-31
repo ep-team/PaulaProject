@@ -43,7 +43,7 @@ public class UserServiceImplTest extends AbstractTransactionalJUnit4SpringContex
 	@After
 	public void clear() {
 		userList.clear();
-}
+	}
 	
 	@Test
 	public void testCheckAnswer() {
@@ -78,6 +78,8 @@ public class UserServiceImplTest extends AbstractTransactionalJUnit4SpringContex
 	}
 	
 	@Test
+    @Transactional
+    @Rollback(true)
 	public void testFindUserListInfo() {
 		List<User> userList = iUserService.findUserListInfo();
 		Assert.assertNotNull(userList);
@@ -95,6 +97,8 @@ public class UserServiceImplTest extends AbstractTransactionalJUnit4SpringContex
 	}
 	
 	@Test
+    @Transactional
+    @Rollback(true)
 	public void testForgetResetPassword() {
 		if (user != null) {
 			ServerResponse<String> resp = iUserService.forgetResetPassword(user.getUsername(), user.getPassword(), "token");

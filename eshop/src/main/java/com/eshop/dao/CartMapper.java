@@ -95,4 +95,9 @@ public interface CartMapper {
      * @return
      */
     List<Cart> selectAllCheckedCartByUserId(Integer userId);
+    
+    /**
+     * @return
+     */
+    List<Cart> findCartListInfo();
 }

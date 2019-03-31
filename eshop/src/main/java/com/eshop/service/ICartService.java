@@ -1,6 +1,9 @@
 package com.eshop.service;
 
+import java.util.List;
+
 import com.eshop.common.ServerResponse;
+import com.eshop.pojo.Cart;
 import com.eshop.vo.CartVo;
 
 /**
@@ -58,4 +61,9 @@ public interface ICartService {
      * @return
      */
     ServerResponse<Integer> getCartProductCount(Integer userId);
+    
+    /**
+     * @return
+     */
+    List<Cart> findCartListInfo();
 }

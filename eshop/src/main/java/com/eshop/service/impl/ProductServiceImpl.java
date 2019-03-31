@@ -300,4 +300,8 @@ public class ProductServiceImpl implements IProductService {
         return ServerResponse.createBySuccess(pageInfo);
     }
 
+	public List<Product> getAllProductList() {
+		return productMapper.selectProductMapperList();
+	}
+
 }

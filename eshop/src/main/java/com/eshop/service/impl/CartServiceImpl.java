@@ -191,7 +191,9 @@ public class CartServiceImpl implements ICartService {
 
                 if(cartItem.getChecked() == Const.Cart.CHECKED){
                     //如果已经勾选,增加到整个的购物车总价中
-                    cartTotalPrice = BigDecimalUtil.add(cartTotalPrice.doubleValue(),cartProductVo.getProductTotalPrice().doubleValue());
+                	if (cartProductVo != null && cartProductVo.getProductTotalPrice() != null && cartTotalPrice != null) {
+                		cartTotalPrice = BigDecimalUtil.add(cartTotalPrice.doubleValue(),cartProductVo.getProductTotalPrice().doubleValue());
+                	}
                 }
                 cartProductVoList.add(cartProductVo);
             }
@@ -218,6 +220,14 @@ public class CartServiceImpl implements ICartService {
         return cartMapper.selectDetailsCartProductCheckedStatusByUserId(userId) == 0;
 
     }
+
+	/* (non-Javadoc)
+	 * @see com.eshop.service.ICartService#selectCartListInfo()
+	 */
+	@Override
+	public List<Cart> findCartListInfo() {
+		return cartMapper.findCartListInfo();
+	}
 
 
 }
