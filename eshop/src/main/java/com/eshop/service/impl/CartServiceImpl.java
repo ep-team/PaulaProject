@@ -25,7 +25,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * Created by Paula
+ * 
+ * @author Paula Lin
+ *
  */
 @Service("iCartService")
 public class CartServiceImpl implements ICartService {
@@ -36,6 +38,13 @@ public class CartServiceImpl implements ICartService {
     @Autowired
     private ProductMapper productMapper;
 
+    /**
+     * @param userId
+	 * @param productId
+	 * @param count
+	 * @return
+	 * 
+	 */
     public ServerResponse<CartVo> addProduct (Integer userId,Integer productId,Integer count){
         if(productId == null || count == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
@@ -58,9 +67,16 @@ public class CartServiceImpl implements ICartService {
             cart.setQuantity(count);
             cartMapper.updateCartByPrimaryKeySelective(cart);
         }
-        return this.list(userId);
+        return this.listCart(userId);
     }
 
+    /**
+     * @param userId
+	 * @param productId
+	 * @param count
+	 * @return
+	 * 
+	 */
     public ServerResponse<CartVo> updateProduct (Integer userId,Integer productId,Integer count){
         if(productId == null || count == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
@@ -71,9 +87,15 @@ public class CartServiceImpl implements ICartService {
             cart.setQuantity(count);
         }
         cartMapper.updateCartByPrimaryKey(cart);
-        return this.list(userId);
+        return this.listCart(userId);
     }
-
+    
+    /**
+     * @param userId
+	 * @param productId
+	 * @return
+	 * 
+	 */
     public ServerResponse<CartVo> deleteProduct (Integer userId,String productIds){
     	//用逗号","分隔字符串productIds
         List<String> productList = Splitter.on(",").splitToList(productIds);
@@ -81,22 +103,37 @@ public class CartServiceImpl implements ICartService {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
         cartMapper.deleteByUserIdAndProductIds(userId,productList);
-        return this.list(userId);
+        return this.listCart(userId);
     }
 
-
+    /**
+     * @param userId
+	 * @return
+	 * 
+	 */
     public ServerResponse<CartVo> listCart (Integer userId){
         CartVo cartVo = this.getCartVoLimit(userId);
         return ServerResponse.createBySuccess(cartVo);
     }
 
 
-
-    public ServerResponse<CartVo> selectOrUnSelect (Integer userId,Integer productId,Integer checked){
+    /**
+     * @param userId
+	 * @param productId
+	 * @param checked
+	 * @return
+	 * 
+	 */
+    public ServerResponse<CartVo> selectOrUnSelectProduct (Integer userId,Integer productId,Integer checked){
         cartMapper.checkedCartOrUncheckedCartProduct(userId,productId,checked);
-        return this.list(userId);
+        return this.listCart(userId);
     }
 
+    /**
+     * @param userId
+	 * @return
+	 * 
+	 */
     public ServerResponse<Integer> getCartProductCount(Integer userId){
         if(userId == null){
             return ServerResponse.createBySuccess(0);
@@ -104,7 +141,11 @@ public class CartServiceImpl implements ICartService {
         return ServerResponse.createBySuccess(cartMapper.selectCartTotalProductCount(userId));
     }
 
-
+    /**
+     * @param userId
+	 * @return
+	 * 
+	 */
     private CartVo getCartVoLimit(Integer userId){
         CartVo cartVo = new CartVo();
         List<Cart> cartList = cartMapper.selectOneCartByUserId(userId);
@@ -164,6 +205,11 @@ public class CartServiceImpl implements ICartService {
         return cartVo;
     }
 
+    /**
+     * @param userId
+	 * @return
+	 * 
+	 */
     private boolean getAllCheckedStatus(Integer userId){
         if(userId == null){
             return false;
@@ -172,30 +218,6 @@ public class CartServiceImpl implements ICartService {
         return cartMapper.selectDetailsCartProductCheckedStatusByUserId(userId) == 0;
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

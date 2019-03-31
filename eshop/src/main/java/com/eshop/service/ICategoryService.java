@@ -6,7 +6,9 @@ import com.eshop.common.ServerResponse;
 import com.eshop.pojo.Category;
 
 /**
- * Created by Paula
+ * 
+ * @author Paula Lin
+ *
  */
 public interface ICategoryService {
 	

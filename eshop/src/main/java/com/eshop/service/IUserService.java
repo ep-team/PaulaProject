@@ -3,6 +3,11 @@ package com.eshop.service;
 import com.eshop.common.ServerResponse;
 import com.eshop.pojo.User;
 
+/**
+ * 
+ * @author Paula Lin
+ *
+ */
 public interface IUserService {
 	/**
 	 * @param username

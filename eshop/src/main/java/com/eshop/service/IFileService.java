@@ -3,7 +3,9 @@ package com.eshop.service;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Created by Paula
+ * 
+ * @author Paula Lin
+ *
  */
 public interface IFileService {
 

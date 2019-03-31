@@ -9,8 +9,10 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-/*
+/**
  * 
+ * @author Paula Lin
+ *
  */
 public class RedisPool {
 	
@@ -35,6 +37,9 @@ public class RedisPool {
     private static String redisIp = PropertiesUtil.getStringProperty("redis.ip");
     private static Integer redisPort = PropertiesUtil.getIntegerProperty("redis.port");
     
+    /**
+	 * 
+	 */
     //初始化连接池, 只能调用一次,而且只能类内部调用
     private static void initPool() {
     	JedisPoolConfig config = new JedisPoolConfig();
@@ -55,30 +60,32 @@ public class RedisPool {
     static {
     	initPool();
     }
-
+    
+    public static JedisPool getJedisPool() {
+    	return pool;
+    }
+    /**
+     * @return
+     */
     public static Jedis getJedis() {
     	return pool.getResource();
     }
     
+    /**
+	 * @param httpServletRequest
+     * @param httpServletResponse
+     * @param object
+     * @param ex 
+     * @return
+	 */
     public static void returnResource(Jedis jedis) {
     	pool.returnResource(jedis);
     }
     
+    /**
+     * @param jedis
+     */
     public static void returnBrokenResource(Jedis jedis) {
     	pool.returnBrokenResource(jedis);
     }
-    
-    //测试redis连接
-    public static void main(String[] args) {
-		Jedis jedis = pool.getResource();
-		//jedis.setnx判定设置的key是否存在
-		jedis.set("paulakey", "paulavalue");
-		//jedis使用完后放回连接池中
-		returnResource(jedis);
-		
-		//销毁连接池中的所有连接
-		pool.destroy();//临时调用, 在实际生产环境中不会销毁, 因为业务代码会不断获取redis连接
-		System.out.println("Program is ended.");
-	}
-
 }

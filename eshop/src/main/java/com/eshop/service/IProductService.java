@@ -6,7 +6,9 @@ import com.eshop.vo.ProductDetailVo;
 import com.github.pagehelper.PageInfo;
 
 /**
- * Created by Paula
+ * 
+ * @author Paula Lin
+ *
  */
 public interface IProductService {
 	/**

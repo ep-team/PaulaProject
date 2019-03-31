@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Paula
+ * 
+ * @author Paula Lin
+ *
  */
 @Service("iShippingService")
 public class ShippingServiceImpl implements IShippingService {
@@ -27,6 +29,12 @@ public class ShippingServiceImpl implements IShippingService {
     @Autowired
     private ShippingMapper shippingMapper;
 
+    /**
+     * @param userId
+     * @param shipping
+	 * @return
+	 * 
+	 */
     public ServerResponse addShippingAddress(Integer userId, Shipping shipping){
         shipping.setUserId(userId);
         int rowCount = shippingMapper.insertShipping(shipping);
@@ -38,6 +46,12 @@ public class ShippingServiceImpl implements IShippingService {
         return ServerResponse.createByErrorMessage("新建地址失败");
     }
 
+    /**
+     * @param userId
+     * @param shippingId
+	 * @return
+	 * 
+	 */
     public ServerResponse<String> deleteShippingAddress(Integer userId,Integer shippingId){
         int resultCount = shippingMapper.deleteShipingByShippingIdUserId(userId,shippingId);
         if(resultCount > 0){
@@ -46,7 +60,12 @@ public class ShippingServiceImpl implements IShippingService {
         return ServerResponse.createByErrorMessage("删除地址失败");
     }
 
-
+    /**
+     * @param userId
+     * @param shipping
+	 * @return
+	 * 
+	 */
     public ServerResponse updateShippingAddress(Integer userId, Shipping shipping){
         shipping.setUserId(userId);
         int rowCount = shippingMapper.updateShippingByShipping(shipping);
@@ -56,6 +75,12 @@ public class ShippingServiceImpl implements IShippingService {
         return ServerResponse.createByErrorMessage("更新地址失败");
     }
 
+    /**
+     * @param userId
+     * @param shippingId
+	 * @return
+	 * 
+	 */
     public ServerResponse<Shipping> selectShippingAddress(Integer userId, Integer shippingId){
         Shipping shipping = shippingMapper.selectShippingByShippingIdUserId(userId,shippingId);
         if(shipping == null){
@@ -64,7 +89,13 @@ public class ShippingServiceImpl implements IShippingService {
         return ServerResponse.createBySuccess("更新地址成功",shipping);
     }
 
-
+    /**
+     * @param userId
+     * @param pageNum
+     * @param pageSize
+	 * @return
+	 * 
+	 */
     public ServerResponse<PageInfo> listShippingAddress(Integer userId,int pageNum,int pageSize){
         PageHelper.startPage(pageNum,pageSize);
         List<Shipping> shippingList = shippingMapper.selectShippingByUserId(userId);

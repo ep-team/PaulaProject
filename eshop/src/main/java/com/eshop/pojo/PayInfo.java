@@ -2,6 +2,11 @@ package com.eshop.pojo;
 
 import java.util.Date;
 
+/**
+ * 
+ * @author Paula Lin
+ *
+ */
 public class PayInfo {
     private Integer id;
 

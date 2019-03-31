@@ -6,6 +6,11 @@ import org.apache.ibatis.annotations.Param;
 
 import com.eshop.pojo.Shipping;
 
+/**
+ * 
+ * @author Paula Lin
+ *
+ */
 public interface ShippingMapper {
     int deleteShippingByPrimaryKey(Integer id);
 

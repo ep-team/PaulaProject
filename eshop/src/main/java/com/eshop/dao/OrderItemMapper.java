@@ -6,6 +6,11 @@ import org.apache.ibatis.annotations.Param;
 
 import com.eshop.pojo.OrderItem;
 
+/**
+ * 
+ * @author Paula Lin
+ *
+ */
 public interface OrderItemMapper {
     int deleteOrderItemByPrimaryKey(Integer id);
 

@@ -4,6 +4,11 @@ import org.apache.ibatis.annotations.Param;
 
 import com.eshop.pojo.User;
 
+/**
+ * 
+ * @author Paula Lin
+ *
+ */
 public interface UserMapper {
     int deleteUserByPrimaryKey(Integer id);
 

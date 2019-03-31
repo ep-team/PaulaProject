@@ -1,5 +1,10 @@
 package com.eshop.pojo;
 
+/**
+ * 
+ * @author Paula Lin
+ *
+ */
 public class Lombok {
 	private String name;
 

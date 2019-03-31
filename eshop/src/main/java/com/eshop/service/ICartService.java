@@ -4,7 +4,9 @@ import com.eshop.common.ServerResponse;
 import com.eshop.vo.CartVo;
 
 /**
- * Created by Paula
+ * 
+ * @author Paula Lin
+ *
  */
 public interface ICartService {
 	

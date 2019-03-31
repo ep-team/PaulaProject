@@ -5,7 +5,9 @@ import com.eshop.pojo.Shipping;
 import com.github.pagehelper.PageInfo;
 
 /**
- * Created by Paula
+ * 
+ * @author Paula Lin
+ *
  */
 public interface IShippingService {
 	/**

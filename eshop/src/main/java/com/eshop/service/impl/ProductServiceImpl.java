@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Paula
+ * 
+ * @author Paula Lin
+ *
  */
 @Service("iProductService")
 public class ProductServiceImpl implements IProductService {
@@ -43,7 +45,12 @@ public class ProductServiceImpl implements IProductService {
 
     @Autowired
     private ICategoryService iCategoryService;
-
+    
+    /**
+     * @param product
+	 * @return
+	 * 
+	 */
     public ServerResponse saveOrUpdateProduct(Product product){
         if(product != null)
         {
@@ -72,7 +79,12 @@ public class ProductServiceImpl implements IProductService {
         return ServerResponse.createByErrorMessage("新增或更新产品参数不正确");
     }
 
-
+    /**
+     * @param productId
+     * @param status
+	 * @return
+	 * 
+	 */
     public ServerResponse<String> setSaleStatus(Integer productId,Integer status){
         if(productId == null || status == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
@@ -87,7 +99,11 @@ public class ProductServiceImpl implements IProductService {
         return ServerResponse.createByErrorMessage("修改产品销售状态失败");
     }
 
-
+    /**
+     * @param productId
+	 * @return
+	 * 
+	 */
     public ServerResponse<ProductDetailVo> manageProductDetail(Integer productId){
         if(productId == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
@@ -100,6 +116,11 @@ public class ProductServiceImpl implements IProductService {
         return ServerResponse.createBySuccess(productDetailVo);
     }
 
+    /**
+     * @param product
+	 * @return
+	 * 
+	 */
     private ProductDetailVo assembleProductDetailVo(Product product){
         ProductDetailVo productDetailVo = new ProductDetailVo();
         productDetailVo.setId(product.getId());
@@ -129,7 +150,12 @@ public class ProductServiceImpl implements IProductService {
     }
 
 
-
+    /**
+     * @param pageNum
+     * @param pageSize
+	 * @return
+	 * 
+	 */
     public ServerResponse<PageInfo> getProductList(int pageNum,int pageSize){
         //startPage--start
         //填充自己的sql查询逻辑
@@ -148,7 +174,12 @@ public class ProductServiceImpl implements IProductService {
         pageResult.setList(productListVoList);
         return ServerResponse.createBySuccess(pageResult);
     }
-
+    
+    /**
+     * @param product
+	 * @return
+	 * 
+	 */
     private ProductListVo assembleProductListVo(Product product){
         ProductListVo productListVo = new ProductListVo();
         productListVo.setId(product.getId());
@@ -163,7 +194,14 @@ public class ProductServiceImpl implements IProductService {
     }
 
 
-
+    /**
+     * @param productName
+     * @param productId
+     * @param pageNum
+     * @param pageSize
+	 * @return
+	 * 
+	 */
     public ServerResponse<PageInfo> searchProduct(String productName,Integer productId,int pageNum,int pageSize){
         PageHelper.startPage(pageNum,pageSize);
         if(StringUtils.isNotBlank(productName)){
@@ -180,7 +218,11 @@ public class ProductServiceImpl implements IProductService {
         return ServerResponse.createBySuccess(pageResult);
     }
 
-
+    /**
+     * @param productId
+	 * @return
+	 * 
+	 */
     public ServerResponse<ProductDetailVo> getProductDetail(Integer productId){
         if(productId == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
@@ -198,7 +240,15 @@ public class ProductServiceImpl implements IProductService {
         return ServerResponse.createBySuccess(productDetailVo);
     }
 
-
+    /**
+     * @param keyword
+     * @param categoryId
+     * @param pageNum
+     * @param pageSize
+     * @param orderBy
+	 * @return
+	 * 
+	 */
     public ServerResponse<PageInfo> getProductByKeywordCategory(String keyword,Integer categoryId,int pageNum,int pageSize,String orderBy){
         //参数校验
     	if(StringUtils.isBlank(keyword) && categoryId == null){

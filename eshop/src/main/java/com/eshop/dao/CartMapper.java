@@ -6,6 +6,11 @@ import org.apache.ibatis.annotations.Param;
 
 import com.eshop.pojo.Cart;
 
+/**
+ * 
+ * @author Paula Lin
+ *
+ */
 public interface CartMapper {
 	int deleteCartByPrimaryKey(Integer id);
 

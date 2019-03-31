@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by Paula
+ * 
+ * @author Paula Lin
+ *
  */
 @Service("iCategoryService")
 public class CategoryServiceImpl implements ICategoryService {
@@ -28,6 +30,12 @@ public class CategoryServiceImpl implements ICategoryService {
     @Autowired
     private CategoryMapper categoryMapper;
 
+    /**
+     * @param categoryName
+	 * @param parentId
+	 * @return
+	 * 
+	 */
     public ServerResponse addCategory(String categoryName,Integer parentId){
         if(parentId == null || StringUtils.isBlank(categoryName)){
             return ServerResponse.createByErrorMessage("添加品类参数错误");
@@ -45,6 +53,12 @@ public class CategoryServiceImpl implements ICategoryService {
         return ServerResponse.createByErrorMessage("添加品类失败");
     }
 
+    /**
+     * @param categoryId
+	 * @param categoryName
+	 * @return
+	 * 
+	 */
     public ServerResponse updateCategoryName(Integer categoryId,String categoryName){
         if(categoryId == null || StringUtils.isBlank(categoryName)){
             return ServerResponse.createByErrorMessage("更新品类参数错误");
@@ -60,6 +74,11 @@ public class CategoryServiceImpl implements ICategoryService {
         return ServerResponse.createByErrorMessage("更新品类名字失败");
     }
 
+    /**
+     * @param categoryId
+	 * @return
+	 * 
+	 */
     public ServerResponse<List<Category>> getChildrenParallelCategory(Integer categoryId){
         List<Category> categoryList = categoryMapper.selectCategoryChildrensByParentId(categoryId);
         if(CollectionUtils.isEmpty(categoryList)){
@@ -90,7 +109,12 @@ public class CategoryServiceImpl implements ICategoryService {
         return ServerResponse.createBySuccess(categoryIdList);
     }
 
-
+    /**
+     * 
+     * @param categorySet
+     * @param categoryId
+     * @return
+     */
     //递归算法,算出子节点
     private Set<Category> findChildCategory(Set<Category> categorySet ,Integer categoryId){
         Category category = categoryMapper.selectCategoryByPrimaryKey(categoryId);

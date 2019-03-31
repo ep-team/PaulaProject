@@ -14,6 +14,11 @@ import redis.clients.jedis.ShardedJedisPool;
 import redis.clients.util.Hashing;
 import redis.clients.util.Sharded;
 
+/**
+ * 
+ * @author Paula Lin
+ *
+ */
 /*
  * 二期
  * Redis分片连接池
@@ -75,19 +80,35 @@ public class RedisShardedPool {
     	initPool();
     }
 
+    /**
+     * 
+     * @return
+     */
     public static ShardedJedis getJedis() {
     	//从ShardedJedisPool获取SharddeJedis
     	return shardedJedisPool.getResource();
     }
     
+    /**
+     * 
+     * @param shardedJedis
+     */
     public static void returnResource(ShardedJedis shardedJedis) {
     	shardedJedisPool.returnResource(shardedJedis);
     }
     
+    /**
+     * 
+     * @param shardedJedis
+     */
     public static void returnBrokenResource(ShardedJedis shardedJedis) {
     	shardedJedisPool.returnBrokenResource(shardedJedis);
     }
     
+    /**
+     * 
+     * @param args
+     */
     //测试redis连接
     public static void main(String[] args) {
 		ShardedJedis shardedJedis = shardedJedisPool.getResource();

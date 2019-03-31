@@ -1,5 +1,10 @@
 package com.eshop.common;
 
+/**
+ * 
+ * @author Paula Lin
+ *
+ */
 public enum ResponseCode {
 	SUCCESS(0,"SUCCESS"),
 	ERROR(1,"ERROR"),

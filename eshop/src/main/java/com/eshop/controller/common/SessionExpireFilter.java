@@ -19,13 +19,20 @@ import com.eshop.utilities.CookieUtil;
 import com.eshop.utilities.JsonUtil;
 import com.eshop.utilities.RedisPoolUtil;
 
-/*
- * 二期
+/**
+ * 
+ * @author Paula Lin
+ *
  */
 public class SessionExpireFilter implements Filter {
 
 	private static Logger logger = LoggerFactory.getLogger(SessionExpireFilter.class);
 	
+	/**
+	 * @param servletRequest
+	 * @param servletResponse
+	 * @param filterChain
+	 */
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
 			throws IOException, ServletException {

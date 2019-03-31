@@ -14,17 +14,21 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * Created by Paula
+ * 
+ * @author Paula Lin
+ *
  */
 @Service("iFileService")
 public class FileServiceImpl implements IFileService {
 
     private Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
     
-    /*
-     * @param MultipartFile file
-     * @param String path ->文件的目标路径
-     */
+    /**
+     * @param file
+	 * @param path
+	 * @return
+	 * 
+	 */
     public String upload(MultipartFile file,String path){
     	//获取上传的文件的文件名 -> String fileName
         String fileName = file.getOriginalFilename();

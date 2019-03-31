@@ -15,22 +15,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by Paula
  * 
- * 二期
+ * @author Paula Lin
+ *
  */
 
 @Component
 public class ExceptionResolver implements HandlerExceptionResolver{
 	
 	private static Logger logger = LoggerFactory.getLogger(ExceptionResolver.class);
-	/*
-	 * Object o, 就是具体的处理
+	
+	/**
+	 * @param httpServletRequest
+     * @param httpServletResponse
+     * @param object
+     * @param ex 
+     * @return
 	 */
     @Override
-    public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
+    public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object, Exception ex) {
     	//哪一个连接URI发生了Exception
-        logger.error("{} Exception",httpServletRequest.getRequestURI(),e);
+        logger.error("{} Exception",httpServletRequest.getRequestURI(),ex);
         
         //将ModelAndView转化为Json
         //如果使用Jackson2.x, 则要使用MappingJackson2JsonView
@@ -41,7 +46,7 @@ public class ExceptionResolver implements HandlerExceptionResolver{
         modelAndView.addObject("status",ResponseCode.ERROR.getCode());
         modelAndView.addObject("msg","接口异常,详情请查看服务端日志的异常信息");
         //e.toString()返回是简单扼要的异常
-        modelAndView.addObject("data",e.toString());
+        modelAndView.addObject("data",ex.toString());
         return modelAndView;
     }
 

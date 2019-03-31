@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.eshop.pojo.Category;
 
+/**
+ * 
+ * @author Paula Lin
+ *
+ */
 public interface CategoryMapper {
     int deleteCategoryByPrimaryKey(Integer id);
 

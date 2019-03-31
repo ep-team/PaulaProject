@@ -6,6 +6,11 @@ import org.apache.ibatis.annotations.Param;
 
 import com.eshop.pojo.Product;
 
+/**
+ * 
+ * @author Paula Lin
+ *
+ */
 public interface ProductMapper {
     int deleteProductMapperByPrimaryKey(Integer id);
 

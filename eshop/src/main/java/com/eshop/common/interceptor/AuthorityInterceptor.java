@@ -2,7 +2,6 @@ package com.eshop.common.interceptor;
 
 import com.eshop.common.Const;
 import com.eshop.common.ServerResponse;
-import com.eshop.common.TokenCache;
 import com.eshop.pojo.User;
 import com.eshop.utilities.CookieUtil;
 import com.eshop.utilities.JsonUtil;
@@ -24,16 +23,24 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Created by paula
- * 二期
+ * 
+ * @author Paula Lin
+ *
  */
 
 public class AuthorityInterceptor implements HandlerInterceptor{
 
 	private static Logger logger = LoggerFactory.getLogger(AuthorityInterceptor.class);
-	//该方法在controller处理之前被调用
+	
+	/**
+	 * @param httpServletRequest
+     * @param httpServletResponse
+     * @param handler
+     * @return
+	 */
+	///该方法在controller处理之前被调用
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object handler) throws Exception {
     	logger.info("preHandle");
         //请求中Controller中的方法名
         HandlerMethod handlerMethod = (HandlerMethod)handler;
@@ -54,7 +61,7 @@ public class AuthorityInterceptor implements HandlerInterceptor{
         
         //解析传入Controller下方法的方法参数,具体的参数key以及value是什么，我们打印日志
         StringBuffer requestParamBuffer = new StringBuffer();
-        Map paramMap = request.getParameterMap();
+        Map paramMap = httpServletRequest.getParameterMap();
         Iterator it = paramMap.entrySet().iterator();
         while (it.hasNext()){
             Map.Entry entry = (Map.Entry)it.next();
@@ -76,7 +83,7 @@ public class AuthorityInterceptor implements HandlerInterceptor{
 
         User user = null;
 
-        String loginToken = CookieUtil.readLoginToken(request);
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
         if(StringUtils.isNotEmpty(loginToken)){
             String userJsonStr = RedisShardedPoolUtil.get(loginToken);
             user = JsonUtil.string2Obj(userJsonStr,User.class);
@@ -86,11 +93,11 @@ public class AuthorityInterceptor implements HandlerInterceptor{
             //返回false.即不会调用controller里的方法
         	
         	//拦截器中, 需要response将输出进行重新的时候, 一定要调用response.reset(), 将response进行重置
-            response.reset();// 这里要添加reset，否则报异常 getWriter() has already been called for this response.
-            response.setCharacterEncoding("UTF-8");//重置response时要设置编码，否则会乱码
-            response.setContentType("application/json;charset=UTF-8");//这里要设置返回值的类型，因为全部是json接口。
+            httpServletResponse.reset();// 这里要添加reset，否则报异常 getWriter() has already been called for this response.
+            httpServletResponse.setCharacterEncoding("UTF-8");//重置response时要设置编码，否则会乱码
+            httpServletResponse.setContentType("application/json;charset=UTF-8");//这里要设置返回值的类型，因为全部是json接口。
 
-            PrintWriter out = response.getWriter();
+            PrintWriter out = httpServletResponse.getWriter();
 
             //上传由于富文本的控件要求，要特殊处理返回值，这里面区分是否登录以及是否有权限
             if(user == null){
@@ -136,15 +143,27 @@ public class AuthorityInterceptor implements HandlerInterceptor{
         return true;
     }
 
+    /**
+	 * @param httpServletRequest
+     * @param httpServletResponse
+     * @param handler
+     * @param modelAndView
+	 */
     //该方法在controller处理之后被调用
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object handler, ModelAndView modelAndView) throws Exception {
     	logger.info("postHandle");
     }
 
+    /**
+	 * @param httpServletRequest
+     * @param httpServletResponse
+     * @param handler
+     * @param ex
+	 */
     //在所有执行之后被调用, 如果系统不是前后端分离, 那么就砸视图呈现之后调用afterCompletion
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object handler, Exception ex) throws Exception {
     	logger.info("afterCompletion");
     }
 }

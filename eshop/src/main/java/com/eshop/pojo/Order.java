@@ -3,6 +3,11 @@ package com.eshop.pojo;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/**
+ * 
+ * @author Paula Lin
+ *
+ */
 public class Order {
     private Integer id;
 

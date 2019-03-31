@@ -7,7 +7,9 @@ import com.github.pagehelper.PageInfo;
 import java.util.Map;
 
 /**
- * Created by Paula
+ * 
+ * @author Paula Lin
+ *
  */
 public interface IOrderService {
 	/**

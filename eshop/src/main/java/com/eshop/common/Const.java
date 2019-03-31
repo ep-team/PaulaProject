@@ -4,6 +4,11 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+/**
+ * 
+ * @author Paula Lin
+ *
+ */
 public class Const {
 	public static final String CURRENT_USER = "currentUser";
 	public static final String EMAIL = "email";
