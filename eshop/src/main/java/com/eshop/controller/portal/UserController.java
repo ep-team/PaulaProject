@@ -86,6 +86,7 @@ public class UserController {
 		//if pass the validation for user access, then cache user's info <sessionId, UserInfo> as loginToken to redis for 30 min
 		//RedisCacheExtime.REDIS_SESSION_EXTIME = 30 min
 		if(response.isSuccess()) {
+			CookieUtil.writeLoginToken(httpServletResponse, session.getId());
 			RedisPoolUtil.setEx(session.getId(), Const.RedisCacheExtime.REDIS_SESSION_EXTIME, JsonUtil.obj2String(response.getData()));
 		}
 		return response;

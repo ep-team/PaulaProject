@@ -53,9 +53,9 @@ public class ShippingController {
      * @param shipping
      * @return
      */
-    @RequestMapping("newShippingAddress.do")
+    @RequestMapping("create_shipping_address.do")
     @ResponseBody
-    public ServerResponse newShippingAddress(HttpServletRequest httpServletRequest,Shipping shipping){
+    public ServerResponse createShippingAddress(HttpServletRequest httpServletRequest,Shipping shipping){
     	
     	//Retrieve loginToken from request
     	String loginToken = CookieUtil.readLoginToken(httpServletRequest);
@@ -85,7 +85,7 @@ public class ShippingController {
      * @param shippingId
      * @return
      */
-    @RequestMapping("deleteShippingAddress.do")
+    @RequestMapping("delete_shipping_address.do")
     @ResponseBody
     public ServerResponse deleteShippingAddress(HttpServletRequest httpServletRequest,Integer shippingId){
     	//Retrieve loginToken from request
@@ -113,7 +113,7 @@ public class ShippingController {
      * @param shipping
      * @return
      */
-    @RequestMapping("updateShippingAddress.do")
+    @RequestMapping("update_shipping_address.do")
     @ResponseBody
     public ServerResponse updateShippingAddress(HttpServletRequest httpServletRequest,Shipping shipping){
     	
@@ -144,7 +144,7 @@ public class ShippingController {
      * @param shippingId
      * @return
      */
-    @RequestMapping("selectShippingAddress.do")
+    @RequestMapping("select_shipping_address.do")
     @ResponseBody
     public ServerResponse<Shipping> selectShippingAddress(HttpServletRequest httpServletRequest,Integer shippingId){
     	//Retrieve loginToken from request
@@ -174,7 +174,7 @@ public class ShippingController {
      * @param httpServletRequest
      * @return
      */
-    @RequestMapping("listShippingAddress.do")
+    @RequestMapping("list_shipping_address.do")
     @ResponseBody
     public ServerResponse<PageInfo> listShippingAddress(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum,
                                          @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,

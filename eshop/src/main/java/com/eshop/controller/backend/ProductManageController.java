@@ -36,7 +36,7 @@ import java.util.Map;
  *		7.	upload rich text and image to system server
 
  *      
- * @author Paula
+ * @author Paula Lin
  *
  */
 @Controller
