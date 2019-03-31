@@ -7,12 +7,22 @@ import org.springframework.util.StringUtils;
 import java.security.MessageDigest;
 
 /**
- * Created by paula
+ * 
+ * @author Paula Lin
+ *
  */
 public class MD5Util {
 
 	private static Logger logger = LoggerFactory.getLogger(MD5Util.class);
 	
+    private static final String hexDigits[] = {"0", "1", "2", "3", "4", "5",
+            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
+
+	/**
+	 * 
+	 * @param b
+	 * @return
+	 */
 	//加密算法
     private static String byteArrayToHexString(byte b[]) {
         StringBuffer resultSb = new StringBuffer();
@@ -22,6 +32,11 @@ public class MD5Util {
         return resultSb.toString();
     }
 
+    /**
+     * 
+     * @param b
+     * @return
+     */
     //加密算法
     private static String byteToHexString(byte b) {
         int n = b;
@@ -53,14 +68,16 @@ public class MD5Util {
         return resultString.toUpperCase();
     }
 
+    /**
+     * 
+     * @param origin
+     * @return
+     */
     //使用utf-8作为字符集进行MD5加密
     public static String MD5EncodeUtf8(String origin) {
         origin = origin + PropertiesUtil.getStringProperty("password.salt", "");
         return MD5Encode(origin, "utf-8");
     }
 
-
-    private static final String hexDigits[] = {"0", "1", "2", "3", "4", "5",
-            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
 
 }

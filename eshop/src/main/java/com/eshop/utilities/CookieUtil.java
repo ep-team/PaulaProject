@@ -8,8 +8,10 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*
- * 二期
+/**
+ * 
+ * @author Paula Lin
+ *
  */
 public class CookieUtil {
 
@@ -20,6 +22,11 @@ public class CookieUtil {
 	//COOKIE_NAME是服务端要种到客户端浏览器上的
 	private final static String COOKIE_NAME = "eshop_login_token";
 	
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
 	//读cookie
 	public static String readLoginToken(HttpServletRequest request) {
 		Cookie[] cookies = request.getCookies();
@@ -36,8 +43,11 @@ public class CookieUtil {
 		return null;
 	}
 	
-		
-	
+	/**
+	 * 
+	 * @param response
+	 * @param token
+	 */
 	//用户登录时写入cookie
 	public static void writeLoginToken(HttpServletResponse response, String token) {
 		//cookie种在.eshop.com,那么www.eshop.com和user.eshop.com都可以获取到相同的cookie
@@ -58,6 +68,11 @@ public class CookieUtil {
 		response.addCookie(cookie);
 	}
 	
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 */
 	//删除cookie
 	public static void delLoginToken(HttpServletRequest request, HttpServletResponse response) {
 		Cookie[] cookies = request.getCookies();

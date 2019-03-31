@@ -3,7 +3,9 @@ package com.eshop.vo;
 import java.math.BigDecimal;
 
 /**
- * Created by Paula
+ * 
+ * @author Paula Lin
+ *
  */
 public class CartProductVo {
 
@@ -24,106 +26,210 @@ public class CartProductVo {
 
     private String limitQuantity;//限制数量的一个返回结果
 
+    /**
+     * 
+     * @return
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * 
+     * @param id
+     */
     public void setId(Integer id) {
         this.id = id;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Integer getUserId() {
         return userId;
     }
 
+    /**
+     * 
+     * @param userId
+     */
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Integer getProductId() {
         return productId;
     }
 
+    /**
+     * 
+     * @param productId
+     */
     public void setProductId(Integer productId) {
         this.productId = productId;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Integer getQuantity() {
         return quantity;
     }
 
+    /**
+     * 
+     * @param quantity
+     */
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getProductName() {
         return productName;
     }
 
+    /**
+     * 
+     * @param productName
+     */
     public void setProductName(String productName) {
         this.productName = productName;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getProductSubtitle() {
         return productSubtitle;
     }
 
+    /**
+     * 
+     * @param productSubtitle
+     */
     public void setProductSubtitle(String productSubtitle) {
         this.productSubtitle = productSubtitle;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getProductMainImage() {
         return productMainImage;
     }
 
+    /**
+     * 
+     * @param productMainImage
+     */
     public void setProductMainImage(String productMainImage) {
         this.productMainImage = productMainImage;
     }
 
+    /**
+     * 
+     * @return
+     */
     public BigDecimal getProductPrice() {
         return productPrice;
     }
 
+    /**
+     * 
+     * @param productPrice
+     */
     public void setProductPrice(BigDecimal productPrice) {
         this.productPrice = productPrice;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Integer getProductStatus() {
         return productStatus;
     }
 
+    /**
+     * 
+     * @param productStatus
+     */
     public void setProductStatus(Integer productStatus) {
         this.productStatus = productStatus;
     }
 
+    /**
+     * 
+     * @return
+     */
     public BigDecimal getProductTotalPrice() {
         return productTotalPrice;
     }
 
+    /**
+     * 
+     * @param productTotalPrice
+     */
     public void setProductTotalPrice(BigDecimal productTotalPrice) {
         this.productTotalPrice = productTotalPrice;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Integer getProductStock() {
         return productStock;
     }
 
+    /**
+     * 
+     * @param productStock
+     */
     public void setProductStock(Integer productStock) {
         this.productStock = productStock;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Integer getProductChecked() {
         return productChecked;
     }
 
+    /**
+     * 
+     * @param productChecked
+     */
     public void setProductChecked(Integer productChecked) {
         this.productChecked = productChecked;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getLimitQuantity() {
         return limitQuantity;
     }
 
+    /**
+     * 
+     * @param limitQuantity
+     */
     public void setLimitQuantity(String limitQuantity) {
         this.limitQuantity = limitQuantity;
     }

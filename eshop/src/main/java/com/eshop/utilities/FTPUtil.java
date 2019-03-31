@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by paula
+ * 
+ * @author Paula Lin
+ *
  */
 public class FTPUtil {
 
@@ -19,13 +21,27 @@ public class FTPUtil {
     private static String ftpIp = PropertiesUtil.getStringProperty("ftp.server.ip");
     private static String ftpUser = PropertiesUtil.getStringProperty("ftp.user");
     private static String ftpPass = PropertiesUtil.getStringProperty("ftp.pass");
-
+    
+    /**
+     * 
+     * @param ip
+     * @param port
+     * @param user
+     * @param pwd
+     */
     public FTPUtil(String ip,int port,String user,String pwd){
         this.ip = ip;
         this.port = port;
         this.user = user;
         this.pwd = pwd;
     }
+    
+    /**
+     * 
+     * @param fileList
+     * @return
+     * @throws IOException
+     */
     public static boolean uploadFile(List<File> fileList) throws IOException {
         FTPUtil ftpUtil = new FTPUtil(ftpIp,21,ftpUser,ftpPass);
         logger.info("开始连接ftp服务器");
@@ -34,9 +50,12 @@ public class FTPUtil {
         return result;
     }
 
-    
-    /*
-     * @param String remotePath->远程路径, FTP服务器配置在Linux上, 在Linux上是文件夹
+    /**
+     * 
+     * @param remotePath
+     * @param fileList
+     * @return
+     * @throws IOException
      */
     private boolean uploadFile(String remotePath,List<File> fileList) throws IOException {
         boolean uploaded = true;
@@ -78,7 +97,14 @@ public class FTPUtil {
         return uploaded;
     }
 
-
+    /**
+     * 
+     * @param ip
+     * @param port
+     * @param user
+     * @param pwd
+     * @return
+     */
     /*
      * FTP服务器连接
      */

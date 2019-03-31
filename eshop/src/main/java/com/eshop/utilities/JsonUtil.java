@@ -17,9 +17,10 @@ import com.eshop.pojo.User;
 import com.github.pagehelper.StringUtil;
 import com.google.common.collect.Lists;
 
-
-/*
- * 二期
+/**
+ * 
+ * @author Paula Lin
+ *
  */
 public class JsonUtil {
 	
@@ -46,6 +47,11 @@ public class JsonUtil {
 		objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	}
 	
+	/**
+	 * 
+	 * @param obj
+	 * @return
+	 */
 	public static <T> String obj2String(T obj) {
 		if(obj == null) {
 			return null;
@@ -58,6 +64,11 @@ public class JsonUtil {
 		}
 	}
 	 
+	/**
+	 * 
+	 * @param obj
+	 * @return
+	 */
 	/*
 	 * 获取格式化好的json
 	 */
@@ -73,6 +84,12 @@ public class JsonUtil {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param str
+	 * @param clazz
+	 * @return
+	 */
 	/*
 	 * 反序列化01-处理简单对象
 	 */
@@ -92,6 +109,12 @@ public class JsonUtil {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param str
+	 * @param typeReference
+	 * @return
+	 */
 	/*
 	 * 反序列化02-可以处理复杂对象,包括 Map, List, Set
 	 * TypeReference代表具体的类型
@@ -125,8 +148,10 @@ public class JsonUtil {
 		}
 	}
 	
-	
-	
+	/**
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		User u1 = new User();
 		u1.setId(1);

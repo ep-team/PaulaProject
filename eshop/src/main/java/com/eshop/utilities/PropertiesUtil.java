@@ -9,7 +9,9 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
- * Created by paula
+ * 
+ * @author Paula Lin
+ *
  */
 public class PropertiesUtil {
 
@@ -27,6 +29,11 @@ public class PropertiesUtil {
         }
     }
 
+    /**
+     * 
+     * @param key
+     * @return
+     */
     public static String getStringProperty(String key){
         String value = props.getProperty(key.trim());
         if(StringUtils.isBlank(value)){
@@ -35,6 +42,11 @@ public class PropertiesUtil {
         return value.trim();
     }
 
+    /**
+     * 
+     * @param key
+     * @return
+     */
     public static Integer getIntegerProperty(String key){
         String value = props.getProperty(key.trim());
         if(StringUtils.isBlank(value)){
@@ -43,6 +55,12 @@ public class PropertiesUtil {
         return Integer.parseInt(value.trim());
     }
     
+    /**
+     * 
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     public static String getStringProperty(String key,String defaultValue){
 
         String value = props.getProperty(key.trim());
@@ -52,6 +70,12 @@ public class PropertiesUtil {
         return value.trim();
     }
     
+    /**
+     * 
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     public static Integer getIntegerProperty(String key,int defaultValue){
 
         String value = props.getProperty(key.trim());
@@ -61,6 +85,12 @@ public class PropertiesUtil {
         return Integer.parseInt(value.trim());
     }
 
+    /**
+     * 
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     public static boolean getBooleanProperty(String key, boolean defaultValue){
 
         String value = props.getProperty(key.trim());

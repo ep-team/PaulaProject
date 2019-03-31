@@ -6,13 +6,21 @@ import org.slf4j.LoggerFactory;
 import com.eshop.common.RedisPool;
 import redis.clients.jedis.Jedis;
 
-/*
- * 二期
+/**
+ * 
+ * @author Paula Lin
+ *
  */
 public class RedisPoolUtil {
 	
 	private static Logger logger = LoggerFactory.getLogger(RedisPoolUtil.class);
 	
+	/**
+	 * 
+	 * @param key
+	 * @param value
+	 * @return
+	 */
 	public static String set(String key, String value) {
 		Jedis jedis = null;
 		String result = null;
@@ -29,6 +37,13 @@ public class RedisPoolUtil {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param key
+	 * @param exTime
+	 * @param value
+	 * @return
+	 */
 	/*
 	 * @Param int exTime: 单位是秒
 	 * 用户首次登陆的时候需要调用并加上exTime, 后期用户再登陆则调用expire来设置用户的有效期即可
@@ -49,6 +64,12 @@ public class RedisPoolUtil {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param key
+	 * @param exTime
+	 * @return
+	 */
 	/*
 	 * 重新设置key的有效期,单位是秒 
 	 */
@@ -69,6 +90,11 @@ public class RedisPoolUtil {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public static String get(String key) {
 		Jedis jedis = null;
 		String result = null;
@@ -85,6 +111,11 @@ public class RedisPoolUtil {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public static Long del(String key) {
 		Jedis jedis = null;
 		Long result = null;
@@ -101,6 +132,10 @@ public class RedisPoolUtil {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Jedis jedis = RedisPool.getJedis();
 		
