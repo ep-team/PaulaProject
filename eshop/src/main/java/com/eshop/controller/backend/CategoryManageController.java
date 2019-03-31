@@ -76,7 +76,7 @@ public class CategoryManageController {
      * @param categoryId
      * @return
      */
-    @RequestMapping("get_category.do")
+    @RequestMapping("get_children_category.do")
     @ResponseBody
     public ServerResponse getChildrenParallelCategory(@RequestParam(value = "categoryId" ,defaultValue = "0") Integer categoryId){
     	//AuthorityInterceptor will intercept the request and validate the authority of the user before add category rule.
@@ -92,7 +92,7 @@ public class CategoryManageController {
      * @param categoryId
      * @return
      */
-    @RequestMapping("get_deep_category.do")
+    @RequestMapping("get_deep_childrencategory.do")
     @ResponseBody
     public ServerResponse getCategoryAndDeepChildrenCategory(@RequestParam(value = "categoryId" ,defaultValue = "0") Integer categoryId){
     	//AuthorityInterceptor will intercept the request and validate the authority of the user before add category rule.
