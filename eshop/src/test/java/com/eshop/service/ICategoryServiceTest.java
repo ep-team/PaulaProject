@@ -15,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.eshop.common.EshopConstant;
 import com.eshop.common.ServerResponse;
-import com.eshop.pojo.Cart;
 import com.eshop.pojo.Category;
-import com.eshop.pojo.Product;
-import com.eshop.pojo.User;
 
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
 public class ICategoryServiceTest extends AbstractTransactionalJUnit4SpringContextTests {
