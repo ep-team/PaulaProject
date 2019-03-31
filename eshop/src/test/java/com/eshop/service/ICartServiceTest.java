@@ -1,4 +1,4 @@
-package com.eshop.service.impl;
+package com.eshop.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import com.eshop.vo.CartVo;
  * Created by Paula
  */
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"})
-public class CartServiceImplTest extends AbstractTransactionalJUnit4SpringContextTests {
+public class ICartServiceTest extends AbstractTransactionalJUnit4SpringContextTests {
 
 	@Autowired
 	private ICartService iCartService;
@@ -62,7 +62,7 @@ public class CartServiceImplTest extends AbstractTransactionalJUnit4SpringContex
 	@After
 	public void clear() {
 		cartList.clear();
-}
+	}
 	
 	@Test
     @Transactional

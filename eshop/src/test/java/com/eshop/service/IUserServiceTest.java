@@ -1,4 +1,4 @@
-package com.eshop.service.impl;
+package com.eshop.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ import com.eshop.utilities.RedisPoolUtil;
  * Created by Paula
  */
 @ContextConfiguration(locations = {"classpath:applicationContext.xml"}) 
-public class UserServiceImplTest extends AbstractTransactionalJUnit4SpringContextTests {
+public class IUserServiceTest extends AbstractTransactionalJUnit4SpringContextTests {
 
 	@Autowired
 	private IUserService iUserService;
